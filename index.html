@@ -1313,32 +1313,44 @@ function renderProfil() {
             : 'Biztren Cloud — Modul Manajemen Pesantren'
     );
 
-    // Informasi identitas pada kartu dashboard
-    const identitas = [];
+ 
+// INFORMASI IDENTITAS PESANTREN
+const identitas = [];
 
-    if (nama) identitas.push(nama);
-    if (alamat) identitas.push(alamat);
-    if (kontak) identitas.push('WA: ' + kontak);
+if (nama) identitas.push('Nama Pesantren : ' + nama);
+if (pengasuh) identitas.push('Pimpinan : ' + pengasuh);
+if (bendahara) identitas.push('Bendahara : ' + bendahara);
+if (alamat) identitas.push('Alamat : ' + alamat);
+if (kontak) identitas.push('Kontak : ' + kontak);
 
-    isiTeks(
-        'teks-profil-aktif',
-        identitas.length
-            ? identitas.join('  •  ')
-            : 'Profil pesantren belum dilengkapi.'
-    );
+const elIdentitas = document.getElementById('teks-profil-aktif');
 
-    // Informasi rekening
-    const infoRekening = [];
+if (elIdentitas) {
+    elIdentitas.textContent = identitas.length
+        ? identitas.join('\n')
+        : 'Profil pesantren belum dilengkapi.';
 
-    if (bank) infoRekening.push(bank);
-    if (rekening) infoRekening.push(rekening);
+    elIdentitas.style.whiteSpace = 'pre-line';
+}
 
-    const teksRekening = infoRekening.length
-        ? 'Pembayaran: ' + infoRekening.join(' • ')
-        : 'Informasi rekening belum diatur.';
+// INFORMASI REKENING PEMBAYARAN
+const infoRekening = [];
 
-    isiTeks('teks-rekening-aktif', teksRekening);
-    isiTeks('spp-info-rekening', teksRekening);
+if (bank) infoRekening.push('Bank : ' + bank);
+if (rekening) infoRekening.push('Nomor Rekening : ' + rekening);
+
+const teksRekening = infoRekening.length
+    ? infoRekening.join('\n')
+    : 'Informasi rekening belum diatur.';
+
+const elRekening = document.getElementById('teks-rekening-aktif');
+
+if (elRekening) {
+    elRekening.textContent = teksRekening;
+    elRekening.style.whiteSpace = 'pre-line';
+}
+
+isiTeks('spp-info-rekening', teksRekening);
 
     // Nama pondok di sidebar
     isiTeks('sidebar-pondok', nama || 'Biztren Pesantren');
