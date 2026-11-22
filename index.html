@@ -1578,6 +1578,452 @@
             renderUsers();
             updateDashboard();
         }
+                // =====================================================
+        // BIZTREN PESANTREN - SIDEBAR & CUSTOM MENU
+        // =====================================================
+
+        const MENU_DEFAULT = [
+            {id:'tahap-1', name:'Dashboard', icon:'▦', group:'Ringkasan', order:1, visible:true},
+            {id:'tahap-2', name:'Santri & Asrama', icon:'♙', group:'Data Pesantren', order:2, visible:true},
+            {id:'tahap-3', name:'SPP / Syahriah', icon:'▤', group:'Keuangan', order:3, visible:true},
+            {id:'tahap-4', name:'Tabungan Santri', icon:'◈', group:'Keuangan', order:4, visible:true},
+            {id:'tahap-6', name:'Buku Kas', icon:'▣', group:'Keuangan', order:5, visible:true},
+            {id:'tahap-9', name:'Tagihan Lain', icon:'▧', group:'Keuangan', order:6, visible:true},
+            {id:'tahap-5', name:'Akademik & Nilai', icon:'✎', group:'Akademik', order:7, visible:true},
+            {id:'tahap-7', name:'Portal Wali Santri', icon:'♧', group:'Komunikasi', order:8, visible:true},
+            {id:'tahap-8', name:'Notifikasi WhatsApp', icon:'◉', group:'Komunikasi', order:9, visible:true},
+            {id:'tahap-10', name:'Pengguna & Hak Akses', icon:'⚙', group:'Pengaturan', order:10, visible:true}
+        ];
+
+        let menuBawaan = JSON.parse(localStorage.getItem('bp_menu_bawaan') || 'null');
+        if (!Array.isArray(menuBawaan) || !menuBawaan.length) {
+            menuBawaan = MENU_DEFAULT.map(x => ({...x}));
+            localStorage.setItem('bp_menu_bawaan', JSON.stringify(menuBawaan));
+        } else {
+            // Menambahkan menu bawaan baru bila ada pembaruan versi.
+            MENU_DEFAULT.forEach(def => {
+                if (!menuBawaan.some(x => x.id === def.id)) {
+                    menuBawaan.push({...def});
+                }
+            });
+        }
+
+        let menuKustom = JSON.parse(localStorage.getItem('bp_menu_kustom') || '[]');
+        if (!Array.isArray(menuKustom)) menuKustom = [];
+
+        function simpanKonfigurasiMenu() {
+            localStorage.setItem('bp_menu_bawaan', JSON.stringify(menuBawaan));
+            localStorage.setItem('bp_menu_kustom', JSON.stringify(menuKustom));
+        }
+
+        function toggleSidebar(force) {
+            const sidebar = document.getElementById('bp-sidebar');
+            const overlay = document.getElementById('bp-sidebar-overlay');
+            const buka = typeof force === 'boolean' ? force : !sidebar.classList.contains('open');
+            sidebar.classList.toggle('open', buka);
+            overlay.classList.toggle('hidden', !buka);
+        }
+
+        function renderSidebarBrand() {
+            const nama = profilPondok.nama || 'Biztren Pesantren';
+            document.getElementById('sidebar-pondok').textContent = nama;
+
+            const logo = document.getElementById('sidebar-logo');
+            const fallback = document.getElementById('sidebar-logo-fallback');
+
+            if (profilPondok.logoDataUrl) {
+                logo.src = profilPondok.logoDataUrl;
+                logo.classList.remove('hidden');
+                fallback.classList.add('hidden');
+            } else {
+                logo.classList.add('hidden');
+                fallback.classList.remove('hidden');
+            }
+        }
+
+        function namaRoleSingkat(role) {
+            const nama = {
+                'Super Admin':'Super Admin',
+                'Bendahara':'Bendahara',
+                'Bagian Pengajaran':'Bagian Pengajaran',
+                'Bagian Pengasuhan':'Bagian Pengasuhan',
+                'Guru':'Guru',
+                'Panitia':'Panitia',
+                'Wali Santri':'Wali Santri'
+            };
+            return nama[role] || role || 'Pengguna';
+        }
+
+        function renderSidebarUser() {
+            const nama = akunAktif ? akunAktif.nama : 'Wali Santri';
+            const role = akunAktif ? akunAktif.role : 'Wali Santri';
+
+            document.getElementById('sidebar-user-name').textContent = nama;
+            document.getElementById('sidebar-user-role').textContent = namaRoleSingkat(role);
+            document.getElementById('topbar-user-name').textContent = nama;
+            document.getElementById('topbar-user-role').textContent = namaRoleSingkat(role);
+
+            const adminTools = document.getElementById('sidebar-admin-tools');
+            if (adminTools) {
+                adminTools.classList.toggle('hidden', !akunAktif || akunAktif.role !== 'Super Admin');
+            }
+
+            const profileButton = document.getElementById('topbar-profile-button');
+            if (profileButton) {
+                profileButton.classList.toggle('hidden', !akunAktif || akunAktif.role !== 'Super Admin');
+            }
+        }
+
+        function renderSidebarNavigation() {
+            const nav = document.getElementById('sidebar-nav');
+            const groups = ['Ringkasan','Data Pesantren','Keuangan','Akademik','Pengasuhan','Kegiatan','Komunikasi','Pengaturan'];
+            const visibleMenus = menuBawaan
+                .filter(m => m.visible !== false && bolehAksesSection(m.id))
+                .sort((a,b) => Number(a.order || 0) - Number(b.order || 0));
+
+            let html = '';
+
+            groups.forEach(group => {
+                const items = visibleMenus.filter(m => m.group === group);
+                if (!items.length) return;
+
+                html += `<p class="bp-nav-heading">${escapeHTML(group)}</p>`;
+
+                items.forEach(m => {
+                    html += `
+                        <a href="#${escapeHTML(m.id)}"
+                           class="bp-nav-link"
+                           data-section="${escapeHTML(m.id)}"
+                           onclick="pilihMenuNavigasi(this)">
+                            <span class="bp-nav-icon">${escapeHTML(m.icon || '◇')}</span>
+                            <span>${escapeHTML(m.name)}</span>
+                        </a>`;
+                });
+            });
+
+            nav.innerHTML = html || '<p class="text-xs text-slate-400 p-3">Tidak ada menu yang tersedia.</p>';
+
+            const customContainer = document.getElementById('custom-menu-nav');
+            let customHtml = '';
+
+            const role = akunAktif?.role || '';
+            const customVisible = menuKustom.filter(m =>
+                m.visible !== false && Array.isArray(m.roles) && m.roles.includes(role)
+            );
+
+            if (customVisible.length) {
+                customHtml += '<p class="bp-nav-heading">Menu Khusus Pesantren</p>';
+
+                customVisible.forEach(m => {
+                    if (m.url) {
+                        customHtml += `
+                            <a href="${escapeHTML(m.url)}" target="_blank" rel="noopener noreferrer"
+                               class="bp-nav-link">
+                                <span class="bp-nav-icon">${escapeHTML(m.icon || '◇')}</span>
+                                <span>${escapeHTML(m.name)}</span>
+                            </a>`;
+                    } else {
+                        customHtml += `
+                            <a href="#custom-${escapeHTML(m.id)}"
+                               class="bp-nav-link"
+                               data-custom-id="${escapeHTML(m.id)}"
+                               onclick="bukaHalamanKustom('${escapeHTML(m.id)}')">
+                                <span class="bp-nav-icon">${escapeHTML(m.icon || '◇')}</span>
+                                <span>${escapeHTML(m.name)}</span>
+                            </a>`;
+                    }
+                });
+            }
+
+            customContainer.innerHTML = customHtml;
+        }
+
+        function pilihMenuNavigasi(link) {
+            document.querySelectorAll('.bp-nav-link').forEach(a => a.classList.remove('active'));
+            link.classList.add('active');
+
+            const id = link.dataset.section;
+            const item = menuBawaan.find(m => m.id === id);
+            document.getElementById('topbar-page-title').textContent = item ? item.name : 'Dashboard';
+
+            if (window.innerWidth < 1280) toggleSidebar(false);
+        }
+
+        function bukaAturMenu() {
+            if (akunAktif?.role !== 'Super Admin') {
+                alert('Pengaturan menu hanya dapat dilakukan oleh Super Admin.');
+                return;
+            }
+
+            renderEditorMenuBawaan();
+            renderEditorMenuKustom();
+
+            const modal = document.getElementById('modal-atur-menu');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function tutupAturMenu() {
+            const modal = document.getElementById('modal-atur-menu');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            renderSidebarNavigation();
+            terapkanHakAkses();
+        }
+
+        function renderEditorMenuBawaan() {
+            const box = document.getElementById('daftar-menu-bawaan');
+
+            box.innerHTML = menuBawaan
+                .slice()
+                .sort((a,b) => Number(a.order || 0) - Number(b.order || 0))
+                .map(m => `
+                    <div class="grid grid-cols-12 gap-2 items-center bg-slate-50 border border-slate-200 rounded-xl p-3">
+                        <div class="col-span-2 md:col-span-1 text-center text-lg">${escapeHTML(m.icon || '◇')}</div>
+
+                        <div class="col-span-10 md:col-span-4">
+                            <input value="${escapeHTML(m.name)}"
+                                onchange="ubahPropertiMenu('${m.id}','name',this.value)"
+                                class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs font-semibold">
+                            <p class="text-[10px] text-slate-400 mt-1">${escapeHTML(m.id)}</p>
+                        </div>
+
+                        <div class="col-span-4 md:col-span-2">
+                            <input value="${escapeHTML(m.icon || '◇')}" maxlength="5"
+                                onchange="ubahPropertiMenu('${m.id}','icon',this.value)"
+                                class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs text-center">
+                        </div>
+
+                        <div class="col-span-4 md:col-span-2">
+                            <input type="number" min="1" max="99" value="${Number(m.order || 1)}"
+                                onchange="ubahPropertiMenu('${m.id}','order',this.value)"
+                                class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs">
+                        </div>
+
+                        <div class="col-span-4 md:col-span-3 flex justify-end">
+                            <label class="flex items-center gap-2 text-[11px] font-semibold text-slate-600">
+                                <input type="checkbox" ${m.visible !== false ? 'checked' : ''}
+                                    onchange="ubahPropertiMenu('${m.id}','visible',this.checked)">
+                                Tampilkan
+                            </label>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function ubahPropertiMenu(id, key, value) {
+            const menu = menuBawaan.find(m => m.id === id);
+            if (!menu) return;
+
+            if (key === 'order') {
+                const order = Number(value);
+                menu.order = Number.isFinite(order) ? Math.max(1, Math.min(99, order)) : menu.order;
+            } else if (key === 'visible') {
+                menu.visible = Boolean(value);
+            } else if (key === 'name') {
+                menu.name = String(value).trim().slice(0,40) || menu.name;
+            } else if (key === 'icon') {
+                menu.icon = String(value).trim().slice(0,5) || '◇';
+            }
+
+            simpanKonfigurasiMenu();
+            renderEditorMenuBawaan();
+            renderSidebarNavigation();
+        }
+
+        function resetMenuBawaan() {
+            if (!confirm('Pulihkan nama, ikon, urutan, dan visibilitas menu bawaan ke pengaturan awal?')) return;
+            menuBawaan = MENU_DEFAULT.map(x => ({...x}));
+            simpanKonfigurasiMenu();
+            renderEditorMenuBawaan();
+            renderSidebarNavigation();
+        }
+
+        document.getElementById('form-menu-baru').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (akunAktif?.role !== 'Super Admin') return;
+
+            const nama = document.getElementById('menu-baru-nama').value.trim();
+            const ikon = document.getElementById('menu-baru-ikon').value.trim() || '◇';
+            const deskripsi = document.getElementById('menu-baru-deskripsi').value.trim();
+            const url = document.getElementById('menu-baru-url').value.trim();
+
+            if (!nama) return alert('Nama menu harus diisi.');
+            if (menuKustom.some(m => m.name.toLowerCase() === nama.toLowerCase())) {
+                return alert('Nama menu tersebut sudah digunakan.');
+            }
+
+            if (url && !/^https:\/\/[^\s]+$/i.test(url)) {
+                return alert('Alamat tautan harus menggunakan HTTPS yang valid.');
+            }
+
+            const roles = [...document.querySelectorAll('#menu-baru-roles input:checked')]
+                .map(x => x.value);
+
+            if (!roles.length) return alert('Pilih minimal satu hak akses.');
+
+            menuKustom.push({
+                id: 'custom-' + Date.now(),
+                name: nama,
+                icon: ikon,
+                description: deskripsi,
+                url,
+                roles,
+                visible: true,
+                createdAt: new Date().toISOString()
+            });
+
+            simpanKonfigurasiMenu();
+            this.reset();
+            document.getElementById('menu-baru-ikon').value = '◇';
+
+            renderEditorMenuKustom();
+            renderSidebarNavigation();
+
+            alert('Menu tambahan berhasil dibuat.');
+        });
+
+        function renderEditorMenuKustom() {
+            const box = document.getElementById('daftar-menu-kustom');
+
+            if (!menuKustom.length) {
+                box.innerHTML = '<div class="text-xs text-slate-400 bg-slate-50 p-4 rounded-xl">Belum ada menu tambahan.</div>';
+                return;
+            }
+
+            box.innerHTML = menuKustom.map(m => `
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="text-lg">${escapeHTML(m.icon || '◇')}</span>
+                            <div class="min-w-0">
+                                <p class="text-xs font-bold text-slate-800">${escapeHTML(m.name)}</p>
+                                <p class="text-[10px] text-slate-400">${m.url ? 'Tautan eksternal' : 'Halaman informasi internal'}</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="hapusMenuKustom('${m.id}')"
+                            class="text-[11px] text-rose-600 font-bold shrink-0">Hapus</button>
+                    </div>
+                    <p class="text-[11px] text-slate-500">${escapeHTML(m.description || 'Tidak ada deskripsi.')}</p>
+                    <div class="flex flex-wrap gap-2 text-[10px] text-slate-500">
+                        ${m.roles.map(r => `<span class="bg-white border rounded-lg px-2 py-1">${escapeHTML(r)}</span>`).join('')}
+                    </div>
+                    <label class="flex items-center gap-2 text-xs text-slate-600">
+                        <input type="checkbox" ${m.visible !== false ? 'checked' : ''}
+                            onchange="ubahVisibilitasMenuKustom('${m.id}',this.checked)">
+                        Tampilkan menu
+                    </label>
+                </div>
+            `).join('');
+        }
+
+        function ubahVisibilitasMenuKustom(id, visible) {
+            const menu = menuKustom.find(m => m.id === id);
+            if (!menu) return;
+            menu.visible = Boolean(visible);
+            simpanKonfigurasiMenu();
+            renderSidebarNavigation();
+        }
+
+        function hapusMenuKustom(id) {
+            if (!confirm('Hapus menu tambahan ini?')) return;
+            menuKustom = menuKustom.filter(m => m.id !== id);
+            simpanKonfigurasiMenu();
+            renderEditorMenuKustom();
+            renderSidebarNavigation();
+            document.getElementById('custom-page-container').classList.add('hidden');
+        }
+
+        function bukaHalamanKustom(id) {
+            const menu = menuKustom.find(m => m.id === id);
+            if (!menu || !menu.roles.includes(akunAktif?.role)) return;
+
+            const area = document.getElementById('custom-page-container');
+            const main = document.querySelector('#app-content main');
+
+            document.querySelectorAll('#app-content main section[id^="tahap-"]')
+                .forEach(s => s.classList.add('hidden'));
+
+            area.innerHTML = `
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm">
+                    <div class="flex items-start gap-4 border-b border-slate-100 pb-5">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-2xl">
+                            ${escapeHTML(menu.icon || '◇')}
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">MENU KHUSUS PESANTREN</p>
+                            <h2 class="text-xl font-extrabold text-slate-900 mt-1">${escapeHTML(menu.name)}</h2>
+                            <p class="text-sm text-slate-500 mt-1">${escapeHTML(menu.description || '')}</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5">
+                        <h3 class="font-bold text-slate-800 text-sm">Halaman informasi khusus</h3>
+                        <p class="text-xs text-slate-600 mt-2">
+                            Menu ini sudah dibuat dan hak aksesnya telah diatur.
+                            Agar dapat mengolah data, diperlukan pembangunan modul sesuai fungsi menu tersebut.
+                            Halaman ini belum melakukan pencatatan transaksi atau penyimpanan data operasional.
+                        </p>
+                    </div>
+                    <button type="button" onclick="kembaliKeDashboardKustom()"
+                        class="mt-5 bg-slate-900 text-white px-5 py-3 rounded-xl text-xs font-bold">
+                        Kembali ke Dashboard
+                    </button>
+                </div>
+            `;
+
+            area.classList.remove('hidden');
+            document.getElementById('topbar-page-title').textContent = menu.name;
+            document.querySelectorAll('.bp-nav-link').forEach(a => a.classList.remove('active'));
+
+            if (window.innerWidth < 1280) toggleSidebar(false);
+        }
+
+        function kembaliKeDashboardKustom() {
+            document.getElementById('custom-page-container').classList.add('hidden');
+            document.querySelectorAll('#app-content main section[id^="tahap-"]')
+                .forEach(s => s.classList.toggle('hidden', !bolehAksesSection(s.id)));
+
+            const dashboard = document.getElementById('tahap-1');
+            if (dashboard && bolehAksesSection('tahap-1')) {
+                dashboard.scrollIntoView({behavior:'smooth', block:'start'});
+            }
+        }
+
+        function rapikanJudulMenu() {
+            document.querySelectorAll('main section h2').forEach(h => {
+                h.textContent = h.textContent.replace(/^\s*\d+\.\s*/, '');
+            });
+        }
+
+        function tandaiMenuAktifSaatScroll() {
+            const links = [...document.querySelectorAll('#sidebar-nav a[data-section]')];
+            const sections = links.map(a => document.getElementById(a.dataset.section)).filter(Boolean);
+            let current = sections[0];
+
+            sections.forEach(sec => {
+                if (sec.getBoundingClientRect().top <= 150) current = sec;
+            });
+
+            if (!current) return;
+
+            links.forEach(a => {
+                a.classList.toggle('active', a.dataset.section === current.id);
+            });
+
+            const menu = menuBawaan.find(m => m.id === current.id);
+            if (menu) document.getElementById('topbar-page-title').textContent = menu.name;
+        }
+
+        window.addEventListener('scroll', tandaiMenuAktifSaatScroll, {passive:true});
+
+        // Terapkan tampilan baru setelah seluruh elemen halaman tersedia.
+        window.addEventListener('DOMContentLoaded', function() {
+            renderSidebarBrand();
+            renderSidebarUser();
+            renderSidebarNavigation();
+            rapikanJudulMenu();
+        });
     </script>
 </body>
 </html>
