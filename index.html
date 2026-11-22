@@ -47,25 +47,21 @@
             transition: .2s;
             margin: 2px 0;
         }
-
         .bp-nav-link:hover {
             color: white;
             background: rgba(255,255,255,.09);
         }
-
         .bp-nav-link.active {
             color: white;
             background: #087f5b;
             box-shadow: 0 5px 15px rgba(8,127,91,.22);
         }
-
         .bp-nav-icon {
             width: 22px;
             text-align: center;
             font-size: 16px;
             flex-shrink: 0;
         }
-
         .bp-nav-heading {
             color: #7f95aa;
             font-size: 10px;
@@ -74,13 +70,11 @@
             text-transform: uppercase;
             padding: 20px 14px 7px;
         }
-
         .bp-section {
             scroll-margin-top: 95px;
             border-radius: 22px;
             box-shadow: 0 5px 24px rgba(15,23,42,.045);
         }
-
         @media (max-width: 1279px) {
             .bp-sidebar { transform: translateX(-100%); }
             .bp-sidebar.open { transform: translateX(0); }
@@ -92,11 +86,9 @@
                 z-index: 44;
             }
         }
-
         @media (min-width: 1280px) {
             #bp-menu-toggle { display: none; }
         }
-
         @media (max-width: 640px) {
             .bp-main-content { padding: 88px 14px 35px !important; }
             .bp-section { padding: 20px !important; }
@@ -104,7 +96,6 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
-
     <!-- MODAL LOGIN & LISENSI QRIS -->
     <div id="login-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-100 text-center space-y-5 my-6">
@@ -113,7 +104,6 @@
                 <h2 class="text-2xl font-bold text-slate-900">Portal Administrasi Pondok Pesantren</h2>
                 <p class="text-xs text-slate-500 mt-1">Akses demo lokal. Password pada versi LocalStorage bukan sistem lisensi aman dan tidak boleh digunakan untuk melindungi data produksi.</p>
             </div>
-
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 inline-block space-y-2">
                 <img src="qris.png" alt="QRIS Aktivasi Biztren Pesantren" class="w-44 h-44 mx-auto object-contain rounded-xl border border-slate-300" onerror="this.style.display='none'; document.getElementById('qris-fallback').style.display='block';">
                 <div id="qris-fallback" class="hidden p-5 bg-slate-200 text-slate-600 text-xs rounded-xl font-medium">
@@ -121,7 +111,6 @@
                 </div>
                 <p class="text-[11px] font-bold text-slate-700">Scan via QRIS / E-Wallet / M-Banking</p>
             </div>
-
             <form id="form-login" class="space-y-3 text-left">
                 <label for="login-role" class="block text-xs font-semibold text-slate-600">Masuk sebagai</label>
                 <select id="login-role" required class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
@@ -146,7 +135,6 @@
             <div class="text-left text-[11px] text-slate-500 bg-amber-50 border border-amber-200 rounded-xl p-3">Akun awal demo lokal: <b>superadmin</b> / <b>admin12345</b>. Super Admin tidak dapat melihat password pengguna yang sudah dibuat; jika pengguna lupa, buatkan password baru. Data masih tersimpan di browser ini dan belum aman untuk penggunaan online.</div>
         </div>
     </div>
-
     <!-- MODAL MENGAMBANG: LENGKAPI PROFIL, LOGO & REKENING -->
     <div id="modal-profil" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overflow-y-auto" onclick="if(event.target===this) tutupModalProfil()">
         <div class="bg-white rounded-3xl p-6 md:p-8 max-w-2xl w-full shadow-2xl border border-slate-200 space-y-5 my-8">
@@ -958,128 +946,172 @@
         localStorage.setItem('bp_santri', JSON.stringify(santriList));
 
 
-        // UPLOAD LOGO MANDIRI TANPA MASUK REPO
-        document.getElementById('input-logo-file').addEventListener('change', function(e) {
-            const file = e.target.files && e.target.files[0];
-            if (!file) return;
-            if (!file.type.startsWith('image/')) {
-                alert("Pilih file gambar (PNG, JPG, WebP, atau SVG).");
-                return;
-            }
-            if (file.size > 1500000) {
-                alert("Ukuran file melebihi 1.5 MB. Gunakan gambar lebih ringan agar penyimpanan browser tetap lancar.");
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                profilPondok.logoDataUrl = ev.target.result;
-                localStorage.setItem('bp_profil', JSON.stringify(profilPondok));
-                renderLogo();
-            };
-            reader.readAsDataURL(file);
-        });
-
-        function hapusLogoMandiri() {
-            profilPondok.logoDataUrl = "";
-            document.getElementById('input-logo-file').value = "";
-            localStorage.setItem('bp_profil', JSON.stringify(profilPondok));
-            renderLogo();
-        }
-
-        function onLogoDefaultLoad() {
-            defaultLogoLoaded = true;
-            renderLogo();
-        }
-
-        function onLogoDefaultError() {
-            defaultLogoLoaded = false;
-            renderLogo();
-        }
-
         
-function renderLogo() {
-    const hasCustomLogo = Boolean(profilPondok.logoDataUrl);
+// =====================================================
+// PROFIL PESANTREN & LOGO
+// =====================================================
 
-    const navUpload = document.getElementById('nav-logo-upload');
-    const navDefault = document.getElementById('nav-logo-default');
-    const fallbackLogo = document.getElementById('fallback-logo');
-    const previewImg = document.getElementById('preview-logo-form');
-    const previewEmpty = document.getElementById('preview-logo-kosong');
-    const cetakLogo = document.getElementById('cetak-logo');
+const inputLogo = document.getElementById('input-logo-file');
 
-    if (hasCustomLogo) {
-        if (navUpload) {
-            navUpload.src = profilPondok.logoDataUrl;
-            navUpload.classList.remove('hidden');
-        }
-        if (navDefault) navDefault.classList.add('hidden');
-        if (fallbackLogo) fallbackLogo.classList.add('hidden');
+if (inputLogo) {
+    inputLogo.addEventListener('change', function(e) {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
 
-        if (previewImg) {
-            previewImg.src = profilPondok.logoDataUrl;
-            previewImg.classList.remove('hidden');
-        }
-        if (previewEmpty) previewEmpty.classList.add('hidden');
-
-        if (cetakLogo) {
-            cetakLogo.src = profilPondok.logoDataUrl;
-            cetakLogo.classList.remove('hidden');
-        }
-    } else {
-        if (navUpload) {
-            navUpload.src = '';
-            navUpload.classList.add('hidden');
+        if (!file.type.startsWith('image/')) {
+            alert('Pilih file gambar PNG, JPG, WebP, atau SVG.');
+            this.value = '';
+            return;
         }
 
-        const logoDefaultAda =
-            typeof defaultLogoLoaded !== 'undefined' && defaultLogoLoaded;
-
-        if (navDefault) {
-            navDefault.classList.toggle('hidden', !logoDefaultAda);
-        }
-        if (fallbackLogo) {
-            fallbackLogo.classList.toggle('hidden', logoDefaultAda);
+        if (file.size > 1500000) {
+            alert('Ukuran logo maksimal 1,5 MB.');
+            this.value = '';
+            return;
         }
 
-        if (previewImg) {
-            previewImg.src = '';
-            previewImg.classList.add('hidden');
-        }
-        if (previewEmpty) previewEmpty.classList.remove('hidden');
+        const reader = new FileReader();
 
-        if (cetakLogo) {
-            cetakLogo.src = '';
-            cetakLogo.classList.add('hidden');
-        }
+        reader.onload = function(ev) {
+            try {
+                const profilBaru = {
+                    ...profilPondok,
+                    logoDataUrl: ev.target.result
+                };
+
+                localStorage.setItem(
+                    'bp_profil',
+                    JSON.stringify(profilBaru)
+                );
+
+                profilPondok = profilBaru;
+                renderProfil();
+
+                alert('Logo berhasil disimpan.');
+            } catch (error) {
+                console.error('Gagal menyimpan logo:', error);
+                alert('Logo gagal disimpan. Periksa kapasitas penyimpanan browser.');
+            }
+        };
+
+        reader.onerror = function() {
+            alert('File logo gagal dibaca.');
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+function hapusLogoMandiri() {
+    if (!confirm('Hapus logo pesantren?')) return;
+
+    const profilBaru = {
+        ...profilPondok,
+        logoDataUrl: ''
+    };
+
+    try {
+        localStorage.setItem('bp_profil', JSON.stringify(profilBaru));
+        profilPondok = profilBaru;
+
+        const input = document.getElementById('input-logo-file');
+        if (input) input.value = '';
+
+        renderProfil();
+        alert('Logo berhasil dihapus.');
+    } catch (error) {
+        console.error(error);
+        alert('Logo gagal dihapus.');
     }
 }
 
+let defaultLogoLoaded = false;
 
-        // TAHAP 1: PROFIL & REKENING
-        document.getElementById('form-profil').addEventListener('submit', function(e) {
-            e.preventDefault();
-            profilPondok = {
-                ...profilPondok,
-                nama: document.getElementById('profil-nama').value.trim(),
-                pengasuh: document.getElementById('profil-pengasuh').value.trim(),
-                bendahara: document.getElementById('profil-bendahara').value.trim(),
-                bank: document.getElementById('profil-bank').value.trim(),
-                rekening: document.getElementById('profil-rekening').value.trim(),
-                kontak: document.getElementById('profil-kontak').value.trim(),
-                alamat: document.getElementById('profil-alamat').value.trim()
-            };
-            localStorage.setItem('bp_profil', JSON.stringify(profilPondok));
+function onLogoDefaultLoad() {
+    defaultLogoLoaded = true;
+    renderLogo();
+}
+
+function onLogoDefaultError() {
+    defaultLogoLoaded = false;
+    renderLogo();
+}
+
+function renderLogo() {
+    const custom = Boolean(profilPondok.logoDataUrl);
+
+    const sidebarLogo = document.getElementById('sidebar-logo');
+    const sidebarFallback = document.getElementById('sidebar-logo-fallback');
+    const preview = document.getElementById('preview-logo-form');
+    const previewKosong = document.getElementById('preview-logo-kosong');
+    const cetakLogo = document.getElementById('cetak-logo');
+    if (custom) {
+        [sidebarLogo, preview, cetakLogo].forEach(img => {
+            if (!img) return;
+            img.src = profilPondok.logoDataUrl;
+            img.classList.remove('hidden');
+        });
+        [sidebarFallback, previewKosong].forEach(el => {
+            if (el) el.classList.add('hidden');
+        });
+    } else {
+        [sidebarLogo, preview, cetakLogo].forEach(img => {
+            if (!img) return;
+            img.removeAttribute('src');
+            img.classList.add('hidden');
+        });
+        if (sidebarFallback) sidebarFallback.classList.remove('hidden');
+        if (previewKosong) previewKosong.classList.remove('hidden');
+    }
+    if (typeof renderSidebarBrand === 'function') {
+        renderSidebarBrand();
+    }
+}
+// =====================================================
+// SIMPAN PROFIL PESANTREN
+// =====================================================
+const formProfil = document.getElementById('form-profil');
+if (formProfil) {
+    formProfil.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const profilBaru = {
+            ...profilPondok,
+            nama: document.getElementById('profil-nama').value.trim(),
+            pengasuh: document.getElementById('profil-pengasuh').value.trim(),
+            bendahara: document.getElementById('profil-bendahara').value.trim(),
+            bank: document.getElementById('profil-bank').value.trim(),
+            rekening: document.getElementById('profil-rekening').value.trim(),
+            kontak: document.getElementById('profil-kontak').value.trim(),
+            alamat: document.getElementById('profil-alamat').value.trim()
+        };
+        if (!profilBaru.nama) {
+            alert('Nama pesantren wajib diisi.');
+            document.getElementById('profil-nama').focus();
+            return;
+        }
+        try {
+            localStorage.setItem(
+                'bp_profil',
+                JSON.stringify(profilBaru)
+            );
+            profilPondok = profilBaru;
             renderProfil();
             tutupModalProfil();
-        });
-
-        
+            alert('Profil pesantren berhasil disimpan.');
+        } catch (error) {
+            console.error('Gagal menyimpan profil:', error);
+            alert('Profil gagal disimpan. Periksa kapasitas penyimpanan browser.');
+        }
+    });
+}
+// =====================================================
+// TAMPILKAN PROFIL PESANTREN
+// =====================================================
 function renderProfil() {
     const isi = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.value = value || '';
     };
-
     isi('profil-nama', profilPondok.nama);
     isi('profil-pengasuh', profilPondok.pengasuh);
     isi('profil-bendahara', profilPondok.bendahara);
@@ -1087,61 +1119,43 @@ function renderProfil() {
     isi('profil-rekening', profilPondok.rekening);
     isi('profil-kontak', profilPondok.kontak);
     isi('profil-alamat', profilPondok.alamat);
-
     renderLogo();
-
     const namaPondok =
         profilPondok.nama || 'Portal Administrasi Pondok Pesantren';
-
     const namaNavbar =
         profilPondok.nama || 'Biztren Pesantren';
-
     const teks = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.textContent = value;
     };
-
     teks('nav-nama-pondok', namaNavbar);
     teks('judul-dashboard-pondok', namaPondok);
-
-    if (typeof renderSidebarBrand === 'function') {
-        renderSidebarBrand();
-    }
-
     const detailBaris = [
-        profilPondok.pengasuh
-            ? `Pimpinan: ${profilPondok.pengasuh}` : '',
-        profilPondok.bendahara
-            ? `Bendahara: ${profilPondok.bendahara}` : '',
+        profilPondok.pengasuh ? `Pimpinan: ${profilPondok.pengasuh}` : '',
+        profilPondok.bendahara ? `Bendahara: ${profilPondok.bendahara}` : '',
         profilPondok.alamat || ''
     ].filter(Boolean);
-
     teks(
         'subjudul-dashboard-pondok',
         detailBaris.length
             ? `Biztren Cloud – Modul Pesantren • ${detailBaris.join(' • ')}`
             : 'Biztren Cloud – Modul Pesantren'
     );
-
     teks(
         'teks-profil-aktif',
         profilPondok.nama
             ? `${profilPondok.nama}${profilPondok.alamat ? ' — ' + profilPondok.alamat : ''}${profilPondok.kontak ? ' • WA: ' + profilPondok.kontak : ''}`
             : 'Profil belum dilengkapi. Klik tombol Lengkapi Profil untuk mengisi identitas pesantren.'
     );
-
     const infoRek = (profilPondok.bank || profilPondok.rekening)
         ? `Rekening: ${profilPondok.bank || '-'} • ${profilPondok.rekening || '-'}`
         : '';
-
     teks('teks-rekening-aktif', infoRek);
-
     teks(
         'spp-info-rekening',
         infoRek || 'Rekening belum diatur. Lengkapi profil pesantren.'
     );
 }
-
         // TAHAP 2: SANTRI
         document.getElementById('form-santri').addEventListener('submit', function(e) {
             e.preventDefault();
