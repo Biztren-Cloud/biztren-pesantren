@@ -14,6 +14,100 @@
             #cetak-area { position: absolute; left: 0; top: 0; width: 100%; padding: 24px; background: white; }
             .no-print { display: none !important; }
         }
+                :root {
+            --bp-navy: #10243a;
+            --bp-green: #087f5b;
+            --bp-sidebar: #10243a;
+        }
+
+        body { background: #f4f7fa; }
+
+        .bp-sidebar {
+            width: 264px;
+            background: var(--bp-sidebar);
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 45;
+            overflow-y: auto;
+            transition: transform .25s ease;
+        }
+
+        .bp-main {
+            margin-left: 264px;
+            min-height: 100vh;
+        }
+
+        .bp-topbar {
+            margin-left: 264px;
+            height: 72px;
+        }
+
+        .bp-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 11px;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: 500;
+            transition: .2s;
+            margin: 2px 0;
+        }
+
+        .bp-nav-link:hover {
+            color: white;
+            background: rgba(255,255,255,.09);
+        }
+
+        .bp-nav-link.active {
+            color: white;
+            background: #087f5b;
+            box-shadow: 0 5px 15px rgba(8,127,91,.22);
+        }
+
+        .bp-nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .bp-nav-heading {
+            color: #7f95aa;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            padding: 20px 14px 7px;
+        }
+
+        .bp-section {
+            scroll-margin-top: 95px;
+            border-radius: 22px;
+            box-shadow: 0 5px 24px rgba(15,23,42,.045);
+        }
+
+        @media (max-width: 1279px) {
+            .bp-sidebar { transform: translateX(-100%); }
+            .bp-sidebar.open { transform: translateX(0); }
+            .bp-main, .bp-topbar { margin-left: 0; }
+            .bp-sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(15,23,42,.45);
+                z-index: 44;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            #bp-menu-toggle { display: none; }
+        }
+
+        @media (max-width: 640px) {
+            .bp-main-content { padding: 88px 14px 35px !important; }
+            .bp-section { padding: 20px !important; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
