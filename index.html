@@ -224,33 +224,123 @@
         </div>
     </div>
 
-    <!-- KONTEN UTAMA APLIKASI -->
-    <div id="app-content" class="hidden">
-        <!-- Navbar -->
-        <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-slate-100 z-40">
-            <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center gap-4">
-                <div class="flex items-center space-x-3 min-w-0">
-                    <img id="nav-logo-upload" src="" alt="Logo Pesantren" class="h-10 w-10 rounded-xl object-contain border border-slate-200 bg-white p-0.5 hidden shrink-0">
-                    <img id="nav-logo-default" src="logo.png" alt="Logo Pesantren" class="h-9 w-auto object-contain hidden shrink-0" onload="onLogoDefaultLoad()" onerror="onLogoDefaultError()">
-                    <div id="fallback-logo" class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold text-xl shrink-0">🕌</div>
-                    <span id="nav-nama-pondok" class="text-lg md:text-xl font-bold tracking-tight text-slate-900 truncate">Biztren Pesantren</span>
+            <!-- SIDEBAR ADMINISTRASI -->
+        <aside id="bp-sidebar" class="bp-sidebar">
+            <div class="px-5 pt-6 pb-5 border-b border-white/10">
+                <div class="flex items-center gap-3">
+                    <img id="sidebar-logo" src="" alt="Logo"
+                         class="hidden w-11 h-11 rounded-xl object-contain bg-white p-1">
+                    <div id="sidebar-logo-fallback"
+                         class="w-11 h-11 rounded-xl bg-emerald-600 flex items-center justify-center text-white text-xl">
+                        🕌
+                    </div>
+                    <div class="min-w-0">
+                        <h2 id="sidebar-pondok"
+                            class="text-sm font-extrabold text-white truncate">Biztren Pesantren</h2>
+                        <p class="text-[10px] text-slate-400 mt-1">MANAGEMENT SYSTEM</p>
+                    </div>
                 </div>
-                <nav class="hidden xl:flex space-x-5 text-xs font-semibold text-slate-600">
-                    <a href="#tahap-1" class="hover:text-emerald-600 transition">1. Dashboard</a>
-                    <a href="#tahap-2" class="hover:text-emerald-600 transition">2. Santri & Asrama</a>
-                    <a href="#tahap-3" class="hover:text-emerald-600 transition">3. SPP/Syahriah</a>
-                    <a href="#tahap-4" class="hover:text-emerald-600 transition">4. Tabungan</a>
-                    <a href="#tahap-5" class="hover:text-emerald-600 transition">5. Akademik</a>
-                    <a href="#tahap-6" class="hover:text-emerald-600 transition">6. Buku Kas</a>
-                    <a href="#tahap-7" class="hover:text-emerald-600 transition">7. Portal Wali</a>
-                    <a href="#tahap-8" class="hover:text-emerald-600 transition">8. Notif WA</a>
-                    <a href="#tahap-9" class="hover:text-emerald-600 transition">9. Tagihan Lain</a>
-                    <a href="#tahap-10" class="hover:text-emerald-600 transition">10. Pengguna</a>
+            </div>
+
+            <div class="px-3 py-4">
+                <div class="px-3 py-2 mb-2 rounded-xl bg-white/5">
+                    <p class="text-[10px] text-slate-400">PENGGUNA AKTIF</p>
+                    <p id="sidebar-user-name" class="text-sm font-bold text-white mt-1 truncate">Pengguna</p>
+                    <p id="sidebar-user-role" class="text-[11px] text-emerald-300 mt-0.5">Jabatan</p>
+                </div>
+
+                <nav id="sidebar-nav">
+                    <p class="bp-nav-heading">Ringkasan</p>
+                    <a href="#tahap-1" class="bp-nav-link" data-section="tahap-1">
+                        <span class="bp-nav-icon">▦</span> Dashboard
+                    </a>
+
+                    <p class="bp-nav-heading">Data Pesantren</p>
+                    <a href="#tahap-2" class="bp-nav-link" data-section="tahap-2">
+                        <span class="bp-nav-icon">♙</span> Santri & Asrama
+                    </a>
+
+                    <p class="bp-nav-heading">Keuangan</p>
+                    <a href="#tahap-3" class="bp-nav-link" data-section="tahap-3">
+                        <span class="bp-nav-icon">▤</span> SPP / Syahriah
+                    </a>
+                    <a href="#tahap-4" class="bp-nav-link" data-section="tahap-4">
+                        <span class="bp-nav-icon">◈</span> Tabungan Santri
+                    </a>
+                    <a href="#tahap-6" class="bp-nav-link" data-section="tahap-6">
+                        <span class="bp-nav-icon">▣</span> Buku Kas
+                    </a>
+                    <a href="#tahap-9" class="bp-nav-link" data-section="tahap-9">
+                        <span class="bp-nav-icon">▧</span> Tagihan Lain
+                    </a>
+
+                    <p class="bp-nav-heading">Akademik</p>
+                    <a href="#tahap-5" class="bp-nav-link" data-section="tahap-5">
+                        <span class="bp-nav-icon">✎</span> Akademik & Nilai
+                    </a>
+
+                    <p class="bp-nav-heading">Komunikasi</p>
+                    <a href="#tahap-7" class="bp-nav-link" data-section="tahap-7">
+                        <span class="bp-nav-icon">♧</span> Portal Wali Santri
+                    </a>
+                    <a href="#tahap-8" class="bp-nav-link" data-section="tahap-8">
+                        <span class="bp-nav-icon">◉</span> Notifikasi WhatsApp
+                    </a>
+
+                    <p class="bp-nav-heading">Pengaturan</p>
+                    <a href="#tahap-10" class="bp-nav-link" data-section="tahap-10">
+                        <span class="bp-nav-icon">⚙</span> Pengguna & Hak Akses
+                    </a>
                 </nav>
-                <button type="button" onclick="logoutApp()" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-600 font-semibold px-3 py-2 rounded-lg transition shrink-0">Keluar</button>
+
+                <div id="custom-menu-nav"></div>
+
+                <div id="sidebar-admin-tools" class="mt-5 pt-4 border-t border-white/10">
+                    <button type="button" onclick="bukaAturMenu()"
+                        class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold">
+                        <span class="text-base">☷</span>
+                        Atur Menu Pesantren
+                    </button>
+                </div>
+            </div>
+
+            <div class="px-5 py-5 mt-3 border-t border-white/10">
+                <p class="text-[10px] text-slate-500">BIZTREN CLOUD</p>
+                <p class="text-[10px] text-slate-400 mt-1">Pesantren Management Suite</p>
+            </div>
+        </aside>
+
+        <div id="bp-sidebar-overlay" class="hidden bp-sidebar-overlay"
+             onclick="toggleSidebar(false)"></div>
+
+        <!-- TOPBAR -->
+        <header class="bp-topbar fixed top-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-b border-slate-200 flex items-center justify-between px-4 md:px-7">
+            <div class="flex items-center gap-3 min-w-0">
+                <button id="bp-menu-toggle" type="button" onclick="toggleSidebar()"
+                    class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 text-xl">
+                    ☰
+                </button>
+                <div class="min-w-0">
+                    <p class="text-[10px] text-slate-400 font-semibold tracking-wide">BIZTREN PESANTREN</p>
+                    <h1 id="topbar-page-title" class="text-sm md:text-base font-bold text-slate-800 truncate">Dashboard</h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 md:gap-4">
+                <button id="topbar-profile-button" type="button" onclick="bukaModalProfil()"
+                    class="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold">
+                    ⚙ Lengkapi Profil
+                </button>
+                <div class="hidden md:block text-right">
+                    <p id="topbar-user-name" class="text-xs font-bold text-slate-800">Pengguna</p>
+                    <p id="topbar-user-role" class="text-[10px] text-slate-500">Jabatan</p>
+                </div>
+                <button type="button" onclick="logoutApp()"
+                    class="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold">
+                    Keluar
+                </button>
             </div>
         </header>
-
         <main class="max-w-7xl mx-auto px-6 pt-28 pb-20 space-y-12">
             <div id="session-role-banner" class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs text-emerald-900 flex flex-wrap justify-between gap-2"><span id="session-role-text">Akun aktif</span><span id="session-task-text"></span></div>
 
