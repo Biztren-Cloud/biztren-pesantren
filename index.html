@@ -996,48 +996,64 @@
             renderLogo();
         }
 
-        function renderLogo() {
-            const hasCustomLogo = Boolean(profilPondok.logoDataUrl);
-            const navUpload = document.getElementById('nav-logo-upload');
-            const navDefault = document.getElementById('nav-logo-default');
-            const fallbackLogo = document.getElementById('fallback-logo');
-            const previewImg = document.getElementById('preview-logo-form');
-            const previewEmpty = document.getElementById('preview-logo-kosong');
-            const cetakLogo = document.getElementById('cetak-logo');
+        
+function renderLogo() {
+    const hasCustomLogo = Boolean(profilPondok.logoDataUrl);
 
-            if (hasCustomLogo) {
-                navUpload.src = profilPondok.logoDataUrl;
-                navUpload.classList.remove('hidden');
+    const navUpload = document.getElementById('nav-logo-upload');
+    const navDefault = document.getElementById('nav-logo-default');
+    const fallbackLogo = document.getElementById('fallback-logo');
+    const previewImg = document.getElementById('preview-logo-form');
+    const previewEmpty = document.getElementById('preview-logo-kosong');
+    const cetakLogo = document.getElementById('cetak-logo');
 
-                navDefault.classList.add('hidden');
-                fallbackLogo.classList.add('hidden');
-
-                previewImg.src = profilPondok.logoDataUrl;
-                previewImg.classList.remove('hidden');
-                previewEmpty.classList.add('hidden');
-
-                cetakLogo.src = profilPondok.logoDataUrl;
-                cetakLogo.classList.remove('hidden');
-            } else {
-                navUpload.src = "";
-                navUpload.classList.add('hidden');
-
-                if (defaultLogoLoaded) {
-                    navDefault.classList.remove('hidden');
-                    fallbackLogo.classList.add('hidden');
-                } else {
-                    navDefault.classList.add('hidden');
-                    fallbackLogo.classList.remove('hidden');
-                }
-
-                previewImg.src = "";
-                previewImg.classList.add('hidden');
-                previewEmpty.classList.remove('hidden');
-
-                cetakLogo.src = "";
-                cetakLogo.classList.add('hidden');
-            }
+    if (hasCustomLogo) {
+        if (navUpload) {
+            navUpload.src = profilPondok.logoDataUrl;
+            navUpload.classList.remove('hidden');
         }
+        if (navDefault) navDefault.classList.add('hidden');
+        if (fallbackLogo) fallbackLogo.classList.add('hidden');
+
+        if (previewImg) {
+            previewImg.src = profilPondok.logoDataUrl;
+            previewImg.classList.remove('hidden');
+        }
+        if (previewEmpty) previewEmpty.classList.add('hidden');
+
+        if (cetakLogo) {
+            cetakLogo.src = profilPondok.logoDataUrl;
+            cetakLogo.classList.remove('hidden');
+        }
+    } else {
+        if (navUpload) {
+            navUpload.src = '';
+            navUpload.classList.add('hidden');
+        }
+
+        const logoDefaultAda =
+            typeof defaultLogoLoaded !== 'undefined' && defaultLogoLoaded;
+
+        if (navDefault) {
+            navDefault.classList.toggle('hidden', !logoDefaultAda);
+        }
+        if (fallbackLogo) {
+            fallbackLogo.classList.toggle('hidden', logoDefaultAda);
+        }
+
+        if (previewImg) {
+            previewImg.src = '';
+            previewImg.classList.add('hidden');
+        }
+        if (previewEmpty) previewEmpty.classList.remove('hidden');
+
+        if (cetakLogo) {
+            cetakLogo.src = '';
+            cetakLogo.classList.add('hidden');
+        }
+    }
+}
+
 
         // TAHAP 1: PROFIL & REKENING
         document.getElementById('form-profil').addEventListener('submit', function(e) {
@@ -1057,44 +1073,74 @@
             tutupModalProfil();
         });
 
-        function renderProfil() {
-            document.getElementById('profil-nama').value = profilPondok.nama || '';
-            document.getElementById('profil-pengasuh').value = profilPondok.pengasuh || '';
-            document.getElementById('profil-bendahara').value = profilPondok.bendahara || '';
-            document.getElementById('profil-bank').value = profilPondok.bank || '';
-            document.getElementById('profil-rekening').value = profilPondok.rekening || '';
-            document.getElementById('profil-kontak').value = profilPondok.kontak || '';
-            document.getElementById('profil-alamat').value = profilPondok.alamat || '';
+        
+function renderProfil() {
+    const isi = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.value = value || '';
+    };
 
-            renderLogo();
+    isi('profil-nama', profilPondok.nama);
+    isi('profil-pengasuh', profilPondok.pengasuh);
+    isi('profil-bendahara', profilPondok.bendahara);
+    isi('profil-bank', profilPondok.bank);
+    isi('profil-rekening', profilPondok.rekening);
+    isi('profil-kontak', profilPondok.kontak);
+    isi('profil-alamat', profilPondok.alamat);
 
-            const namaPondok = profilPondok.nama || "Portal Administrasi Pondok Pesantren";
-            const namaNavbar = profilPondok.nama || "Biztren Pesantren";
+    renderLogo();
 
-            document.getElementById('nav-nama-pondok').textContent = namaNavbar;
-            document.getElementById('judul-dashboard-pondok').textContent = namaPondok;
-            if (typeof renderSidebarBrand === 'function') renderSidebarBrand();
-            const detailBaris = [
-                profilPondok.pengasuh ? `Pimpinan: ${profilPondok.pengasuh}` : '',
-                profilPondok.bendahara ? `Bendahara: ${profilPondok.bendahara}` : '',
-                profilPondok.alamat || ''
-            ].filter(Boolean);
+    const namaPondok =
+        profilPondok.nama || 'Portal Administrasi Pondok Pesantren';
 
-            document.getElementById('subjudul-dashboard-pondok').textContent = detailBaris.length
-                ? `Biztren Cloud – Modul Pesantren • ${detailBaris.join(' • ')}`
-                : "Biztren Cloud – Modul Pesantren";
+    const namaNavbar =
+        profilPondok.nama || 'Biztren Pesantren';
 
-            document.getElementById('teks-profil-aktif').textContent = profilPondok.nama
-                ? `${profilPondok.nama}${profilPondok.alamat ? ' — ' + profilPondok.alamat : ''}${profilPondok.kontak ? ' • WA: ' + profilPondok.kontak : ''}`
-                : "Profil belum dilengkapi. Klik tombol Lengkapi Profil untuk mengisi identitas pesantren.";
+    const teks = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    };
 
-            const infoRek = (profilPondok.bank || profilPondok.rekening)
-                ? `Rekening: ${profilPondok.bank || '-'} • ${profilPondok.rekening || '-'}`
-                : "";
-            document.getElementById('teks-rekening-aktif').textContent = infoRek;
-            const sppInfo = document.getElementById('spp-info-rekening');
-            if (sppInfo) sppInfo.textContent = infoRek || "Rekening belum diatur. Lengkapi profil pesantren.";
-        }
+    teks('nav-nama-pondok', namaNavbar);
+    teks('judul-dashboard-pondok', namaPondok);
+
+    if (typeof renderSidebarBrand === 'function') {
+        renderSidebarBrand();
+    }
+
+    const detailBaris = [
+        profilPondok.pengasuh
+            ? `Pimpinan: ${profilPondok.pengasuh}` : '',
+        profilPondok.bendahara
+            ? `Bendahara: ${profilPondok.bendahara}` : '',
+        profilPondok.alamat || ''
+    ].filter(Boolean);
+
+    teks(
+        'subjudul-dashboard-pondok',
+        detailBaris.length
+            ? `Biztren Cloud – Modul Pesantren • ${detailBaris.join(' • ')}`
+            : 'Biztren Cloud – Modul Pesantren'
+    );
+
+    teks(
+        'teks-profil-aktif',
+        profilPondok.nama
+            ? `${profilPondok.nama}${profilPondok.alamat ? ' — ' + profilPondok.alamat : ''}${profilPondok.kontak ? ' • WA: ' + profilPondok.kontak : ''}`
+            : 'Profil belum dilengkapi. Klik tombol Lengkapi Profil untuk mengisi identitas pesantren.'
+    );
+
+    const infoRek = (profilPondok.bank || profilPondok.rekening)
+        ? `Rekening: ${profilPondok.bank || '-'} • ${profilPondok.rekening || '-'}`
+        : '';
+
+    teks('teks-rekening-aktif', infoRek);
+
+    teks(
+        'spp-info-rekening',
+        infoRek || 'Rekening belum diatur. Lengkapi profil pesantren.'
+    );
+}
 
         // TAHAP 2: SANTRI
         document.getElementById('form-santri').addEventListener('submit', function(e) {
