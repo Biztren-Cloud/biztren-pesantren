@@ -43,6 +43,70 @@
         </div>
     </div>
 
+    <!-- MODAL MENGAMBANG: LENGKAPI PROFIL, LOGO & REKENING -->
+    <div id="modal-profil" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overflow-y-auto" onclick="if(event.target===this) tutupModalProfil()">
+        <div class="bg-white rounded-3xl p-6 md:p-8 max-w-2xl w-full shadow-2xl border border-slate-200 space-y-5 my-8">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                    <h2 class="text-xl font-extrabold text-slate-900">Lengkapi Profil Pesantren</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Atur identitas pondok, pimpinan, bendahara, logo, dan rekening pembayaran.</p>
+                </div>
+                <button type="button" onclick="tutupModalProfil()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm flex items-center justify-center">✕</button>
+            </div>
+
+            <!-- Upload Logo Mandiri -->
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <img id="preview-logo-form" src="" alt="Preview Logo" class="w-16 h-16 rounded-2xl object-contain border border-slate-200 bg-white p-1 hidden shrink-0">
+                <div id="preview-logo-kosong" class="w-16 h-16 rounded-2xl border border-dashed border-slate-300 bg-white flex items-center justify-center text-[11px] text-slate-400 text-center p-1 shrink-0">
+                    Logo
+                </div>
+                <div class="flex-1 space-y-1.5 min-w-0">
+                    <label class="block text-xs font-bold text-slate-700">Logo Pesantren / Lembaga</label>
+                    <input type="file" id="input-logo-file" accept="image/*" class="block w-full text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-[11px] text-slate-400">Tersimpan di browser ini (disarankan di bawah 1,5 MB).</span>
+                        <button type="button" onclick="hapusLogoMandiri()" class="text-[11px] text-rose-600 hover:underline font-semibold shrink-0">Hapus Logo</button>
+                    </div>
+                </div>
+            </div>
+
+            <form id="form-profil" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Pondok Pesantren</label>
+                    <input type="text" id="profil-nama" placeholder="Cth: Pondok Pesantren An-Nawa" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pimpinan / Pengasuh</label>
+                    <input type="text" id="profil-pengasuh" placeholder="Cth: KH. Ahmad Zainudin" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Bendahara</label>
+                    <input type="text" id="profil-bendahara" placeholder="Cth: Ustadz Muhammad Ali" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Bank / E-Wallet Pembayaran</label>
+                    <input type="text" id="profil-bank" placeholder="Cth: BSI / Mandiri / BCA" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">No. Rekening & Atas Nama</label>
+                    <input type="text" id="profil-rekening" placeholder="Cth: 7123456789 a.n. Yayasan Pesantren" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">No. Kontak / WA Pesantren</label>
+                    <input type="text" id="profil-kontak" placeholder="Cth: 081234567890" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Alamat & Kota Pesantren</label>
+                    <input type="text" id="profil-alamat" placeholder="Cth: Jl. Pesantren No. 12, Cilegon" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                </div>
+                <div class="sm:col-span-2 flex justify-end gap-2.5 pt-2 border-t border-slate-100">
+                    <button type="button" onclick="tutupModalProfil()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-50 font-semibold text-xs">Batal</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2.5 rounded-xl text-xs shadow-md">Simpan Profil</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- AREA CETAK KUITANSI / BUKTI -->
     <div id="cetak-area" class="hidden bg-white p-8 max-w-lg mx-auto text-slate-900 border border-slate-300 rounded-2xl my-10 shadow-lg">
         <div class="text-center border-b border-slate-200 pb-4 mb-4">
@@ -59,18 +123,16 @@
     <!-- KONTEN UTAMA APLIKASI -->
     <div id="app-content" class="hidden">
         <!-- Navbar -->
-        <header class="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md border-b border-slate-100 z-40">
+        <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-slate-100 z-40">
             <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center gap-4">
                 <div class="flex items-center space-x-3 min-w-0">
                     <img id="nav-logo-upload" src="" alt="Logo Pesantren" class="h-10 w-10 rounded-xl object-contain border border-slate-200 bg-white p-0.5 hidden shrink-0">
-                    <img id="nav-logo-default" src="logo.png" alt="Logo Pesantren" class="h-9 w-auto object-contain shrink-0" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='flex';">
-                    <div id="fallback-logo" class="w-10 h-10 rounded-xl bg-emerald-600 hidden items-center justify-center text-white font-bold text-xl shrink-0">🕌</div>
-                    <div class="truncate">
-                        <span id="nav-nama-pondok" class="text-lg md:text-xl font-bold tracking-tight text-slate-900">Biztren<span class="text-emerald-600">Pesantren</span></span>
-                    </div>
+                    <img id="nav-logo-default" src="logo.png" alt="Logo Pesantren" class="h-9 w-auto object-contain hidden shrink-0" onload="onLogoDefaultLoad()" onerror="onLogoDefaultError()">
+                    <div id="fallback-logo" class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold text-xl shrink-0">🕌</div>
+                    <span id="nav-nama-pondok" class="text-lg md:text-xl font-bold tracking-tight text-slate-900 truncate">Biztren Pesantren</span>
                 </div>
                 <nav class="hidden xl:flex space-x-5 text-xs font-semibold text-slate-600">
-                    <a href="#tahap-1" class="hover:text-emerald-600 transition">1. Profil & Rekening</a>
+                    <a href="#tahap-1" class="hover:text-emerald-600 transition">1. Dashboard</a>
                     <a href="#tahap-2" class="hover:text-emerald-600 transition">2. Santri & Asrama</a>
                     <a href="#tahap-3" class="hover:text-emerald-600 transition">3. SPP/Syahriah</a>
                     <a href="#tahap-4" class="hover:text-emerald-600 transition">4. Tabungan</a>
@@ -85,9 +147,9 @@
 
         <main class="max-w-7xl mx-auto px-6 pt-28 pb-20 space-y-12">
 
-            <!-- TAHAP 1: DASHBOARD, PROFIL, UPLOAD LOGO & REKENING MANDIRI -->
+            <!-- TAHAP 1: DASHBOARD & TOMBOL LENGKAPI PROFIL -->
             <section id="tahap-1" class="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl space-y-6">
-                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center border-b border-slate-100 pb-5 gap-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-100 pb-5 gap-4">
                     <div>
                         <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200">
                             ● Penyimpanan Lokal Aktif (Data Real)
@@ -96,9 +158,12 @@
                             Portal Administrasi Pondok Pesantren
                         </h1>
                         <p id="subjudul-dashboard-pondok" class="text-xs md:text-sm text-slate-500 mt-1">
-                            Biztren Cloud – Modul Pesantren • Lengkapi profil, logo & rekening langsung di aplikasi.
+                            Biztren Cloud – Modul Pesantren
                         </p>
                     </div>
+                    <button type="button" onclick="bukaModalProfil()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-3 rounded-xl text-xs md:text-sm shadow-md transition shrink-0">
+                        ⚙️ Lengkapi Profil
+                    </button>
                 </div>
 
                 <!-- 4 Kartu Ringkasan Data Nyata -->
@@ -125,52 +190,10 @@
                     </div>
                 </div>
 
-                <!-- Upload Logo Mandiri + Profil & Rekening Pembeli/Pengelola -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                    <!-- Kotak Upload Logo -->
-                    <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
-                        <label class="block text-xs font-bold text-slate-700">Upload Logo Pesantren / Lembaga</label>
-                        <div class="flex items-center gap-3">
-                            <img id="preview-logo-form" src="" alt="Preview Logo" class="w-16 h-16 rounded-xl object-contain border border-slate-200 bg-slate-50 p-1 hidden">
-                            <div id="preview-logo-kosong" class="w-16 h-16 rounded-xl border border-dashed border-slate-300 bg-slate-50 flex items-center justify-center text-xs text-slate-400 text-center p-1">
-                                Belum ada logo
-                            </div>
-                            <div class="flex-1 space-y-1.5">
-                                <input type="file" id="input-logo-file" accept="image/*" class="block w-full text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
-                                <button type="button" onclick="hapusLogoMandiri()" class="text-[11px] text-rose-600 hover:underline font-medium">Hapus Logo Tersimpan</button>
-                            </div>
-                        </div>
-                        <p class="text-[11px] text-slate-400">Disimpan di browser perangkat ini (disarankan ukuran file di bawah 1 MB).</p>
-                    </div>
-
-                    <!-- Form Profil & Rekening -->
-                    <form id="form-profil" class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Pondok Pesantren</label>
-                            <input type="text" id="profil-nama" placeholder="Cth: PP Darul Falah" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Pengasuh / Pimpinan</label>
-                            <input type="text" id="profil-pengasuh" placeholder="Cth: KH. Ahmad Zainudin" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Bank / E-Wallet Pembayaran</label>
-                            <input type="text" id="profil-bank" placeholder="Cth: BSI / Mandiri / BCA" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">No. Rekening & Atas Nama</label>
-                            <input type="text" id="profil-rekening" placeholder="Cth: 7123456789 a.n. Yayasan Darul Falah" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
-                        </div>
-                        <div class="sm:col-span-2 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-                            <input type="text" id="profil-alamat" placeholder="Alamat & Kota Pesantren" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
-                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl text-sm shrink-0">Simpan Profil & Rekening</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div id="info-profil" class="bg-emerald-50/60 border border-emerald-100 rounded-2xl p-4 text-xs text-slate-700 space-y-1">
-                    <p id="teks-profil-aktif">Profil belum diatur.</p>
-                    <p id="teks-rekening-aktif" class="font-semibold text-emerald-800">Rekening pembayaran belum diatur.</p>
+                <!-- Ringkasan Singkat Profil & Rekening Aktif -->
+                <div id="ringkasan-profil-bar" class="bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3.5 text-xs text-slate-600 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <span id="teks-profil-aktif">Profil belum dilengkapi. Klik <strong>Lengkapi Profil</strong> untuk mengisi identitas & rekening.</span>
+                    <span id="teks-rekening-aktif" class="font-semibold text-emerald-700"></span>
                 </div>
             </section>
 
@@ -439,6 +462,7 @@
 
     <script>
         const PASSWORD_LISENSI = "santri2026";
+        let defaultLogoLoaded = false;
 
         window.addEventListener('DOMContentLoaded', () => {
             if (sessionStorage.getItem('biztren_pesantren_8t_login') === 'true') {
@@ -469,6 +493,18 @@
             location.reload();
         }
 
+        function bukaModalProfil() {
+            const modal = document.getElementById('modal-profil');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function tutupModalProfil() {
+            const modal = document.getElementById('modal-profil');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
         function tanggalHariIni() {
             const d = new Date();
             return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -481,9 +517,11 @@
         let profilPondok = JSON.parse(localStorage.getItem('bp_profil')) || {
             nama: "",
             pengasuh: "",
-            alamat: "",
+            bendahara: "",
             bank: "",
             rekening: "",
+            kontak: "",
+            alamat: "",
             logoDataUrl: ""
         };
         let santriList = JSON.parse(localStorage.getItem('bp_santri')) || [];
@@ -520,10 +558,21 @@
             renderLogo();
         }
 
+        function onLogoDefaultLoad() {
+            defaultLogoLoaded = true;
+            renderLogo();
+        }
+
+        function onLogoDefaultError() {
+            defaultLogoLoaded = false;
+            renderLogo();
+        }
+
         function renderLogo() {
             const hasCustomLogo = Boolean(profilPondok.logoDataUrl);
             const navUpload = document.getElementById('nav-logo-upload');
             const navDefault = document.getElementById('nav-logo-default');
+            const fallbackLogo = document.getElementById('fallback-logo');
             const previewImg = document.getElementById('preview-logo-form');
             const previewEmpty = document.getElementById('preview-logo-kosong');
             const cetakLogo = document.getElementById('cetak-logo');
@@ -531,8 +580,9 @@
             if (hasCustomLogo) {
                 navUpload.src = profilPondok.logoDataUrl;
                 navUpload.classList.remove('hidden');
-                navDefault.style.display = 'none';
-                document.getElementById('fallback-logo').style.display = 'none';
+
+                navDefault.classList.add('hidden');
+                fallbackLogo.classList.add('hidden');
 
                 previewImg.src = profilPondok.logoDataUrl;
                 previewImg.classList.remove('hidden');
@@ -543,7 +593,14 @@
             } else {
                 navUpload.src = "";
                 navUpload.classList.add('hidden');
-                navDefault.style.display = '';
+
+                if (defaultLogoLoaded) {
+                    navDefault.classList.remove('hidden');
+                    fallbackLogo.classList.add('hidden');
+                } else {
+                    navDefault.classList.add('hidden');
+                    fallbackLogo.classList.remove('hidden');
+                }
 
                 previewImg.src = "";
                 previewImg.classList.add('hidden');
@@ -561,36 +618,52 @@
                 ...profilPondok,
                 nama: document.getElementById('profil-nama').value.trim(),
                 pengasuh: document.getElementById('profil-pengasuh').value.trim(),
+                bendahara: document.getElementById('profil-bendahara').value.trim(),
                 bank: document.getElementById('profil-bank').value.trim(),
                 rekening: document.getElementById('profil-rekening').value.trim(),
+                kontak: document.getElementById('profil-kontak').value.trim(),
                 alamat: document.getElementById('profil-alamat').value.trim()
             };
             localStorage.setItem('bp_profil', JSON.stringify(profilPondok));
             renderProfil();
-            alert("Profil dan rekening berhasil disimpan.");
+            tutupModalProfil();
         });
 
         function renderProfil() {
-            renderLogo();
             document.getElementById('profil-nama').value = profilPondok.nama || '';
             document.getElementById('profil-pengasuh').value = profilPondok.pengasuh || '';
+            document.getElementById('profil-bendahara').value = profilPondok.bendahara || '';
             document.getElementById('profil-bank').value = profilPondok.bank || '';
             document.getElementById('profil-rekening').value = profilPondok.rekening || '';
+            document.getElementById('profil-kontak').value = profilPondok.kontak || '';
             document.getElementById('profil-alamat').value = profilPondok.alamat || '';
 
-            const namaPondok = profilPondok.nama || "Portal Administrasi Pondok Pesantren";
-            document.getElementById('judul-dashboard-pondok').innerText = namaPondok;
-            document.getElementById('subjudul-dashboard-pondok').innerText =
-                `Biztren Cloud – Modul Pesantren${profilPondok.pengasuh ? ' • Pengasuh: ' + profilPondok.pengasuh : ''}${profilPondok.alamat ? ' • ' + profilPondok.alamat : ''}`;
+            renderLogo();
 
-            document.getElementById('teks-profil-aktif').innerText = profilPondok.nama
-                ? `Profil aktif: ${profilPondok.nama} — Pengasuh: ${profilPondok.pengasuh || '-'} — Alamat: ${profilPondok.alamat || '-'}`
-                : "Profil belum diatur. Isi form di atas untuk menyesuaikan nama pondok.";
+            const namaPondok = profilPondok.nama || "Portal Administrasi Pondok Pesantren";
+            const namaNavbar = profilPondok.nama || "Biztren Pesantren";
+
+            document.getElementById('nav-nama-pondok').textContent = namaNavbar;
+            document.getElementById('judul-dashboard-pondok').textContent = namaPondok;
+
+            const detailBaris = [
+                profilPondok.pengasuh ? `Pimpinan: ${profilPondok.pengasuh}` : '',
+                profilPondok.bendahara ? `Bendahara: ${profilPondok.bendahara}` : '',
+                profilPondok.alamat || ''
+            ].filter(Boolean);
+
+            document.getElementById('subjudul-dashboard-pondok').textContent = detailBaris.length
+                ? `Biztren Cloud – Modul Pesantren • ${detailBaris.join(' • ')}`
+                : "Biztren Cloud – Modul Pesantren";
+
+            document.getElementById('teks-profil-aktif').textContent = profilPondok.nama
+                ? `${profilPondok.nama}${profilPondok.alamat ? ' — ' + profilPondok.alamat : ''}${profilPondok.kontak ? ' • WA: ' + profilPondok.kontak : ''}`
+                : "Profil belum dilengkapi. Klik tombol Lengkapi Profil untuk mengisi identitas pesantren.";
 
             const infoRek = (profilPondok.bank || profilPondok.rekening)
-                ? `Rekening Pembayaran: ${profilPondok.bank || '-'} • ${profilPondok.rekening || '-'}`
-                : "Rekening pembayaran belum diatur.";
-            document.getElementById('teks-rekening-aktif').innerText = infoRek;
+                ? `Rekening: ${profilPondok.bank || '-'} • ${profilPondok.rekening || '-'}`
+                : "";
+            document.getElementById('teks-rekening-aktif').textContent = infoRek;
         }
 
         // TAHAP 2: SANTRI
