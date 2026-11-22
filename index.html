@@ -1299,20 +1299,11 @@ function renderProfil() {
         nama || 'Portal Administrasi Pondok Pesantren'
     );
 
-    // Detail identitas di bawah judul
-    const detail = [];
-
-    if (pengasuh) detail.push('Pimpinan: ' + pengasuh);
-    if (bendahara) detail.push('Bendahara: ' + bendahara);
-    if (alamat) detail.push(alamat);
-
-    isiTeks(
-        'subjudul-dashboard-pondok',
-        detail.length
-            ? detail.join('  •  ')
-            : 'Biztren Cloud — Modul Manajemen Pesantren'
-    );
-
+// Hero Dashboard: hanya menampilkan sambutan
+isiTeks(
+    'subjudul-dashboard-pondok',
+    'Selamat datang di sistem administrasi pesantren.'
+);
  
 // INFORMASI IDENTITAS PESANTREN
 const identitas = [];
