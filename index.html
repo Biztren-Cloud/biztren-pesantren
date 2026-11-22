@@ -237,11 +237,19 @@
                     <p id="sidebar-user-role" class="text-[11px] text-emerald-300 mt-0.5">Jabatan</p>
                 </div>
 
-                <nav id="sidebar-nav">
-                    <p class="bp-nav-heading">Ringkasan</p>
-                    <a href="#tahap-1" class="bp-nav-link" data-section="tahap-1">
-                        <span class="bp-nav-icon">▦</span> Dashboard
-                    </a>
+                
+<nav id="sidebar-nav">
+    <p class="bp-nav-heading">Ringkasan</p>
+
+    <a href="#tahap-1"
+       class="bp-nav-link active"
+       data-section="tahap-1"
+       onclick="showPage('tahap-1'); return false;">
+        <span class="bp-nav-icon">▦</span>
+        Dashboard
+    </a>
+</nav>
+
 
                     <p class="bp-nav-heading">Data Pesantren</p>
                     <a href="#tahap-2" class="bp-nav-link" data-section="tahap-2">
