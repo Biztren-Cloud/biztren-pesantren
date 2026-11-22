@@ -314,20 +314,12 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 md:gap-4">
-                <button id="topbar-profile-button" type="button" onclick="bukaModalProfil()"
-                    class="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold">
-                    ⚙ Lengkapi Profil
-                </button>
-                <div class="hidden md:block text-right">
-                    <p id="topbar-user-name" class="text-xs font-bold text-slate-800">Pengguna</p>
-                    <p id="topbar-user-role" class="text-[10px] text-slate-500">Jabatan</p>
-                </div>
-                <button type="button" onclick="logoutApp()"
-                    class="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold">
-                    Keluar
-                </button>
-            </div>
+            <div class="flex items-center">
+    <button type="button" onclick="logoutApp()"
+        class="px-5 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold transition">
+        Keluar
+    </button>
+</div>
                     <!-- MODAL PENGATURAN MENU -->
         <div id="modal-atur-menu"
              class="hidden fixed inset-0 z-[70] bg-slate-950/60 backdrop-blur-sm items-center justify-center p-3 md:p-6">
