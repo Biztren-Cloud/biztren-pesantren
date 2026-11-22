@@ -874,6 +874,9 @@
             document.getElementById('app-content').classList.remove('hidden');
             renderSemua();
             terapkanHakAkses();
+            rapikanJudulMenu();
+            renderSidebarBrand();
+            renderSidebarUser();
         }
         function logoutApp() {
             sessionStorage.removeItem('bp_active_user');
