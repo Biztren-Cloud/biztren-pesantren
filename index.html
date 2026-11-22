@@ -340,6 +340,113 @@
                     Keluar
                 </button>
             </div>
+                    <!-- MODAL PENGATURAN MENU -->
+        <div id="modal-atur-menu"
+             class="hidden fixed inset-0 z-[70] bg-slate-950/60 backdrop-blur-sm items-center justify-center p-3 md:p-6">
+            <div class="bg-white w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-3xl shadow-2xl">
+
+                <div class="sticky top-0 z-10 bg-white border-b border-slate-200 px-5 md:px-7 py-5 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-lg md:text-xl font-extrabold text-slate-900">Pengaturan Menu Pesantren</h2>
+                        <p class="text-xs text-slate-500 mt-1">Sesuaikan navigasi dengan kebutuhan lembaga Anda.</p>
+                    </div>
+                    <button type="button" onclick="tutupAturMenu()"
+                        class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600">✕</button>
+                </div>
+
+                <div class="p-5 md:p-7 space-y-7">
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4">
+                        <p class="text-xs text-blue-900 font-semibold">Informasi pengaturan</p>
+                        <p class="text-xs text-blue-800 mt-1">
+                            Menu bawaan dapat diubah nama, ikon, urutan, dan visibilitasnya.
+                            Menu inti tidak dihapus permanen agar fungsi utama aplikasi tetap terjaga.
+                            Menu tambahan dapat dibuat sesuai kebutuhan pesantren.
+                        </p>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between gap-3 mb-3">
+                            <div>
+                                <h3 class="font-bold text-slate-900">Menu Bawaan</h3>
+                                <p class="text-xs text-slate-500">Atur nama, ikon, urutan, dan tampil atau sembunyikan.</p>
+                            </div>
+                            <button type="button" onclick="resetMenuBawaan()"
+                                class="text-xs text-rose-600 font-semibold hover:underline">Pulihkan Default</button>
+                        </div>
+                        <div id="daftar-menu-bawaan" class="space-y-2"></div>
+                    </div>
+
+                    <div class="border-t border-slate-200 pt-6">
+                        <h3 class="font-bold text-slate-900">Tambah Menu Baru</h3>
+                        <p class="text-xs text-slate-500 mt-1 mb-4">
+                            Contoh: Koperasi Santri, Kesehatan, Perizinan, Inventaris, atau menu informasi khusus.
+                        </p>
+
+                        <form id="form-menu-baru" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Menu</label>
+                                <input id="menu-baru-nama" required maxlength="40"
+                                    placeholder="Contoh: Koperasi Santri"
+                                    class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Ikon / Simbol</label>
+                                <input id="menu-baru-ikon" maxlength="5" value="◇"
+                                    placeholder="Contoh: 🛒"
+                                    class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Deskripsi Menu</label>
+                                <input id="menu-baru-deskripsi" maxlength="160"
+                                    placeholder="Jelaskan fungsi atau isi halaman menu ini."
+                                    class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Alamat tautan (opsional)</label>
+                                <input id="menu-baru-url" type="url"
+                                    placeholder="https://contoh.com"
+                                    class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm">
+                                <p class="text-[10px] text-slate-400 mt-1">Kosongkan jika ingin membuat halaman informasi internal.</p>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-semibold text-slate-600 mb-2">Hak Akses Menu</label>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs" id="menu-baru-roles">
+                                    <label class="flex gap-2 items-center"><input type="checkbox" value="Super Admin" checked> Super Admin</label>
+                                    <label class="flex gap-2 items-center"><input type="checkbox" value="Bendahara"> Bendahara</label>
+                                    <label class="flex gap-2 items-center"><input type="checkbox" value="Bagian Pengajaran"> Pengajaran</label>
+                                    <label class="flex gap-2 items-center"><input type="checkbox" value="Bagian Pengasuhan"> Pengasuhan</label>
+                                    <label class="flex gap-2 items-center"><input type="checkbox" value="Guru"> Guru</label>
+                                    <label class="flex gap-2 items-center"><input type="checkbox" value="Panitia"> Panitia</label>
+                                </div>
+                            </div>
+                            <div class="md:col-span-2 flex justify-end">
+                                <button type="submit"
+                                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-xl text-xs font-bold">
+                                    + Tambahkan Menu
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="border-t border-slate-200 pt-6">
+                        <h3 class="font-bold text-slate-900">Menu Tambahan</h3>
+                        <p class="text-xs text-slate-500 mt-1 mb-3">Menu khusus yang dibuat oleh pengelola pesantren.</p>
+                        <div id="daftar-menu-kustom" class="space-y-2"></div>
+                    </div>
+                </div>
+
+                <div class="sticky bottom-0 bg-white border-t border-slate-200 px-5 md:px-7 py-4 flex justify-end">
+                    <button type="button" onclick="tutupAturMenu()"
+                        class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl text-xs font-bold">
+                        Selesai
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AREA HALAMAN MENU TAMBAHAN -->
+        <div id="custom-page-container" class="bp-main px-5 md:px-7 pb-12 hidden"></div>
         </header>
         <main class="bp-main bp-main-content px-5 md:px-7 pt-24 pb-12 space-y-7">
             <div id="session-role-banner" class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs text-emerald-900 flex flex-wrap justify-between gap-2"><span id="session-role-text">Akun aktif</span><span id="session-task-text"></span></div>
