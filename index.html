@@ -1070,7 +1070,7 @@
 
             document.getElementById('nav-nama-pondok').textContent = namaNavbar;
             document.getElementById('judul-dashboard-pondok').textContent = namaPondok;
-
+            if (typeof renderSidebarBrand === 'function') renderSidebarBrand();
             const detailBaris = [
                 profilPondok.pengasuh ? `Pimpinan: ${profilPondok.pengasuh}` : '',
                 profilPondok.bendahara ? `Bendahara: ${profilPondok.bendahara}` : '',
