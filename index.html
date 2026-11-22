@@ -24,7 +24,7 @@
             <div class="w-14 h-14 bg-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-emerald-200">🕌</div>
             <div>
                 <h2 class="text-2xl font-bold text-slate-900">Portal Administrasi Pondok Pesantren</h2>
-                <p class="text-xs text-slate-500 mt-1">Scan QRIS untuk pembayaran lisensi, lalu hubungi developer untuk mendapatkan password akses.</p>
+                <p class="text-xs text-slate-500 mt-1">Akses demo lokal. Password pada versi LocalStorage bukan sistem lisensi aman dan tidak boleh digunakan untuk melindungi data produksi.</p>
             </div>
 
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 inline-block space-y-2">
@@ -35,11 +35,28 @@
                 <p class="text-[11px] font-bold text-slate-700">Scan via QRIS / E-Wallet / M-Banking</p>
             </div>
 
-            <form id="form-login" class="space-y-3">
-                <input type="password" id="input-password" placeholder="Masukkan Password (hubungi developer)" required class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none text-center font-mono">
+            <form id="form-login" class="space-y-3 text-left">
+                <label for="login-role" class="block text-xs font-semibold text-slate-600">Masuk sebagai</label>
+                <select id="login-role" required class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    <option value="Super Admin">Super Admin (Pimpinan/Sekpim)</option>
+                    <option value="Bendahara">Bendahara</option>
+                    <option value="Bagian Pengajaran">Bagian Pengajaran</option>
+                    <option value="Bagian Pengasuhan">Bagian Pengasuhan</option>
+                    <option value="Guru">Guru</option>
+                    <option value="Panitia">Panitia</option>
+                    <option value="Wali Santri">Wali Santri</option>
+                </select>
+                <label id="login-id-label" for="input-username" class="block text-xs font-semibold text-slate-600">Username</label>
+                <input type="text" id="input-username" autocomplete="username" placeholder="Username akun" required class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                <label id="login-password-label" for="input-password" class="block text-xs font-semibold text-slate-600">Password</label>
+                <div class="relative">
+                    <input type="password" id="input-password" autocomplete="current-password" placeholder="Password akun" required class="w-full px-4 py-3 pr-14 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    <button type="button" id="toggle-login-password" aria-label="Tampilkan password" class="absolute inset-y-0 right-2 px-3 text-slate-500 hover:text-emerald-700 text-xs font-semibold">Lihat</button>
+                </div>
                 <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition shadow-md text-sm">Masuk ke Portal Pesantren</button>
             </form>
-            <p id="login-error" class="text-xs text-rose-500 font-medium hidden">Password salah! Silakan hubungi developer.</p>
+            <p id="login-error" class="text-xs text-rose-500 font-medium hidden">Username atau password salah, atau akun tidak aktif.</p>
+            <div class="text-left text-[11px] text-slate-500 bg-amber-50 border border-amber-200 rounded-xl p-3">Akun awal demo lokal: <b>superadmin</b> / <b>admin12345</b>. Super Admin tidak dapat melihat password pengguna yang sudah dibuat; jika pengguna lupa, buatkan password baru. Data masih tersimpan di browser ini dan belum aman untuk penggunaan online.</div>
         </div>
     </div>
 
@@ -140,19 +157,22 @@
                     <a href="#tahap-6" class="hover:text-emerald-600 transition">6. Buku Kas</a>
                     <a href="#tahap-7" class="hover:text-emerald-600 transition">7. Portal Wali</a>
                     <a href="#tahap-8" class="hover:text-emerald-600 transition">8. Notif WA</a>
+                    <a href="#tahap-9" class="hover:text-emerald-600 transition">9. Tagihan Lain</a>
+                    <a href="#tahap-10" class="hover:text-emerald-600 transition">10. Pengguna</a>
                 </nav>
                 <button type="button" onclick="logoutApp()" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-600 font-semibold px-3 py-2 rounded-lg transition shrink-0">Keluar</button>
             </div>
         </header>
 
         <main class="max-w-7xl mx-auto px-6 pt-28 pb-20 space-y-12">
+            <div id="session-role-banner" class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs text-emerald-900 flex flex-wrap justify-between gap-2"><span id="session-role-text">Akun aktif</span><span id="session-task-text"></span></div>
 
             <!-- TAHAP 1: DASHBOARD & TOMBOL LENGKAPI PROFIL -->
             <section id="tahap-1" class="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl space-y-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-100 pb-5 gap-4">
                     <div>
                         <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200">
-                            ● Penyimpanan Lokal Aktif (Data Real)
+                            ● Mode Lokal Aktif — Data tersimpan di browser ini
                         </span>
                         <h1 id="judul-dashboard-pondok" class="text-2xl md:text-4xl font-extrabold text-slate-900 mt-2">
                             Portal Administrasi Pondok Pesantren
@@ -213,6 +233,7 @@
                     <input type="text" id="s-kelas" placeholder="Kelas (cth: 7 MTs / 10 MA)" required class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
                     <input type="text" id="s-kamar" placeholder="Kamar & Asrama (cth: Kamar 4 - Putra)" required class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
                     <input type="text" id="s-wa" placeholder="No. WA Wali (cth: 08123456789)" required class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                    <input type="password" id="s-pin-wali" placeholder="PIN Portal Wali (min. 6 digit)" minlength="6" required class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
                     <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm">+ Tambah</button>
                 </form>
 
@@ -252,6 +273,12 @@
                     </select>
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm">+ Catat SPP</button>
                 </form>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-sm">
+                    <h3 class="font-bold text-blue-900">Petunjuk pembayaran dan verifikasi</h3>
+                    <p class="text-xs text-blue-800 mt-1">Wali dapat membayar melalui rekening/QRIS yang dicantumkan pada profil pesantren. Admin mencatat tagihan sebagai Belum Lunas, lalu mengubahnya menjadi Lunas setelah dana benar-benar diterima dan diverifikasi. Versi lokal ini belum terhubung ke payment gateway dan tidak dapat memverifikasi transfer otomatis.</p>
+                    <p class="text-xs text-blue-900 mt-2" id="spp-info-rekening">Lengkapi rekening pada menu Profil Pesantren.</p>
+                </div>
 
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-sm">
@@ -397,21 +424,20 @@
                 </div>
             </section>
 
-            <!-- TAHAP 7: PORTAL WALI SANTRI -->
+            <!-- TAHAP 7: PORTAL WALI SANTRI (AKSES LOKAL) -->
             <section id="tahap-7" class="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl space-y-6">
                 <div class="border-b border-slate-100 pb-4">
                     <h2 class="text-xl font-bold text-slate-900">7. Portal Wali Santri</h2>
-                    <p class="text-xs text-slate-500">Pilih nama santri untuk melihat ringkasan data: kamar, status SPP, saldo tabungan, dan nilai akademik.</p>
+                    <p class="text-xs text-slate-500">Wali masuk menggunakan NIS dan PIN yang didaftarkan admin. Pada versi LocalStorage, akses hanya tersedia di browser/perangkat ini.</p>
                 </div>
-
-                <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-                    <select id="wali-pilih-santri" onchange="renderPortalWali()" class="flex-1 px-4 py-3 rounded-xl border border-slate-300 text-sm bg-white font-medium">
-                        <option value="">-- Pilih Santri untuk Tampilan Wali --</option>
-                    </select>
-                </div>
-
+                <form id="form-login-wali" class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <input id="wali-nis-login" type="text" placeholder="NIS Santri" required class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                    <input id="wali-pin-login" type="password" placeholder="PIN Wali" required class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                    <button class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm" type="submit">Masuk Portal Wali</button>
+                </form>
+                <p id="wali-login-error" class="hidden text-sm text-rose-600"></p>
                 <div id="portal-wali-card" class="bg-slate-50 rounded-2xl p-6 border border-slate-200 text-sm text-slate-600">
-                    Silakan pilih santri terlebih dahulu untuk melihat ringkasan informasi wali santri.
+                    Silakan login menggunakan NIS dan PIN yang diberikan oleh pengelola pesantren.
                 </div>
             </section>
 
@@ -453,6 +479,37 @@
                 </div>
             </section>
 
+            <!-- TAHAP 9: TAGIHAN SELAIN SPP / KEGIATAN -->
+            <section id="tahap-9" class="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl space-y-6">
+                <div class="border-b border-slate-100 pb-4"><h2 class="text-xl font-bold text-slate-900">9. Tagihan Lain & Pembayaran Kegiatan</h2><p class="text-xs text-slate-500">Buat tagihan ujian, ekstrakurikuler, kegiatan, perlengkapan, atau jenis pembayaran lain. Bendahara dapat memverifikasi status pembayaran.</p></div>
+                <form id="form-tagihan" class="grid grid-cols-1 md:grid-cols-6 gap-3 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <select id="tagihan-jenis" class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"><option>Ujian</option><option>Ekstrakurikuler</option><option>Kegiatan</option><option>Perlengkapan</option><option>Asrama</option><option>Lainnya</option></select>
+                    <input id="tagihan-nama" required placeholder="Nama tagihan/kegiatan" class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                    <select id="tagihan-santri" required class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"><option value="">Pilih santri</option></select>
+                    <input id="tagihan-periode" placeholder="Periode / batas waktu" class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                    <input id="tagihan-nominal" type="number" min="1" required placeholder="Nominal Rp" class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm">+ Buat Tagihan</button>
+                </form>
+                <div class="overflow-x-auto"><table class="w-full text-left border-collapse text-sm"><thead><tr class="bg-slate-50 text-slate-500 border-b"><th class="p-3">Jenis</th><th class="p-3">Tagihan</th><th class="p-3">Santri</th><th class="p-3">Periode</th><th class="p-3 text-right">Nominal</th><th class="p-3">Status</th><th class="p-3 text-right">Aksi</th></tr></thead><tbody id="tabel-tagihan"></tbody></table></div>
+                <p class="text-[11px] text-amber-700 bg-amber-50 rounded-xl p-3">Versi lokal: tagihan dan verifikasi dicatat manual. Belum ada payment gateway, notifikasi otomatis, atau portal wali online.</p>
+            </section>
+
+            <!-- TAHAP 10: PENGGUNA, JABATAN UTAMA, DAN PENUGASAN PANITIA -->
+            <section id="tahap-10" class="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl space-y-6">
+                <div class="border-b border-slate-100 pb-4"><h2 class="text-xl font-bold text-slate-900">10. Manajemen Pengguna & Hak Akses</h2><p class="text-xs text-slate-500">Satu akun memiliki satu jabatan utama. Penugasan panitia dapat ditambahkan tanpa mengganti jabatan utama dan dapat dinonaktifkan setelah kegiatan.</p></div>
+                <form id="form-user" class="grid grid-cols-1 md:grid-cols-6 gap-3 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <input id="user-nama" required placeholder="Nama lengkap" class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                    <input id="user-username" required placeholder="Username" class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                    <input id="user-password" type="password" minlength="6" required placeholder="Password min. 6 karakter" class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                    <select id="user-role" class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"><option>Super Admin</option><option>Bendahara</option><option>Bagian Pengajaran</option><option>Bagian Pengasuhan</option><option>Guru</option><option>Panitia</option></select>
+                    <input id="user-tugas" placeholder="Penugasan tambahan (opsional)" class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                    <input id="user-batas" type="date" title="Tanggal akhir penugasan" class="px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                    <button class="md:col-span-6 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm">+ Tambah Akun</button>
+                </form>
+                <div class="overflow-x-auto"><table class="w-full text-left border-collapse text-sm"><thead><tr class="bg-slate-50 text-slate-500 border-b"><th class="p-3">Nama</th><th class="p-3">Username</th><th class="p-3">Jabatan Utama</th><th class="p-3">Penugasan Tambahan</th><th class="p-3">Status</th><th class="p-3 text-right">Aksi</th></tr></thead><tbody id="tabel-user"></tbody></table></div>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-900"><b>Catatan keamanan penting:</b> pembatasan menu pada versi LocalStorage ini hanya simulasi antarmuka. Semua data berada di browser yang sama dan dapat diakses melalui perangkat/browser tersebut. Jangan gunakan untuk data nyata multi-pengguna atau dipublikasikan sebagai sistem aman sebelum autentikasi dan otorisasi backend diterapkan.</div>
+            </section>
+
         </main>
 
         <footer class="bg-slate-950 text-slate-400 py-10 text-center text-sm border-t border-slate-800">
@@ -461,39 +518,118 @@
     </div>
 
     <script>
-        const PASSWORD_LISENSI = "santri2026";
-        let defaultLogoLoaded = false;
-
+        const ROLE_NAMES = ["Super Admin", "Bendahara", "Bagian Pengajaran", "Bagian Pengasuhan", "Guru", "Panitia"];
+        let akunList = JSON.parse(localStorage.getItem('bp_users') || 'null');
+        if (!Array.isArray(akunList) || !akunList.length) {
+            akunList = [{id:'usr-superadmin', nama:'Super Admin', username:'superadmin', password:'admin12345', role:'Super Admin', tugas:'', batas:'', aktif:true}];
+            localStorage.setItem('bp_users', JSON.stringify(akunList));
+        }
+        let akunAktif = null;
         window.addEventListener('DOMContentLoaded', () => {
-            if (sessionStorage.getItem('biztren_pesantren_8t_login') === 'true') {
-                bukaAplikasi();
+            const saved = sessionStorage.getItem('bp_active_user');
+            if (saved) {
+                akunAktif = akunList.find(u => u.id === saved && u.aktif);
+                if (akunAktif) bukaAplikasi();
+                else sessionStorage.removeItem('bp_active_user');
             }
         });
-
+        const loginRole = document.getElementById('login-role');
+        const loginIdInput = document.getElementById('input-username');
+        const loginPasswordInput = document.getElementById('input-password');
+        loginRole.addEventListener('change', function() {
+            const wali = this.value === 'Wali Santri';
+            document.getElementById('login-id-label').textContent = wali ? 'NIS Santri' : 'Username';
+            document.getElementById('login-password-label').textContent = wali ? 'PIN Wali Santri' : 'Password';
+            loginIdInput.placeholder = wali ? 'Masukkan NIS santri' : 'Username akun';
+            loginPasswordInput.placeholder = wali ? 'Masukkan PIN wali' : 'Password akun';
+            loginIdInput.autocomplete = wali ? 'off' : 'username';
+            loginPasswordInput.autocomplete = wali ? 'off' : 'current-password';
+            loginPasswordInput.inputMode = wali ? 'numeric' : 'text';
+            loginPasswordInput.maxLength = wali ? 12 : 128;
+            document.getElementById('login-error').classList.add('hidden');
+        });
+        document.getElementById('toggle-login-password').addEventListener('click', function() {
+            const visible = loginPasswordInput.type === 'text';
+            loginPasswordInput.type = visible ? 'password' : 'text';
+            this.textContent = visible ? 'Lihat' : 'Sembunyikan';
+            this.setAttribute('aria-label', visible ? 'Tampilkan password' : 'Sembunyikan password');
+        });
         document.getElementById('form-login').addEventListener('submit', function(e) {
             e.preventDefault();
-            const pw = document.getElementById('input-password').value;
+            const selectedRole = loginRole.value;
+            const loginId = loginIdInput.value.trim();
+            const password = loginPasswordInput.value;
             const errEl = document.getElementById('login-error');
-            if (pw === PASSWORD_LISENSI) {
-                sessionStorage.setItem('biztren_pesantren_8t_login', 'true');
-                bukaAplikasi();
-            } else {
-                errEl.classList.remove('hidden');
+            errEl.textContent = 'Jenis pengguna, username/NIS, atau password/PIN tidak cocok, atau akun tidak aktif.';
+            if (selectedRole === 'Wali Santri') {
+                const santri = santriList.find(x => String(x.nis || '').toLowerCase() === loginId.toLowerCase() && String(x.pinWali || '') === password);
+                if (!santri) { errEl.classList.remove('hidden'); return; }
+                errEl.classList.add('hidden');
+                document.getElementById('login-modal').style.display = 'none';
+                document.getElementById('app-content').classList.remove('hidden');
+                renderSemua();
+                document.querySelectorAll('main section[id^="tahap-"]').forEach(sec => sec.classList.toggle('hidden', sec.id !== 'tahap-7'));
+                document.querySelectorAll('nav a[href^="#tahap-"]').forEach(link => link.classList.toggle('hidden', link.getAttribute('href') !== '#tahap-7'));
+                const banner = document.getElementById('session-role-banner');
+                if (banner) banner.classList.add('hidden');
+                tampilkanPortalWali(santri);
+                document.getElementById('tahap-7').scrollIntoView({behavior:'smooth',block:'start'});
+                return;
             }
+            akunList = JSON.parse(localStorage.getItem('bp_users') || '[]');
+            const user = akunList.find(u => String(u.username || '').toLowerCase() === loginId.toLowerCase() && u.password === password && u.aktif && u.role === selectedRole);
+            if (!user) { errEl.classList.remove('hidden'); return; }
+            errEl.classList.add('hidden');
+            akunAktif = user;
+            sessionStorage.setItem('bp_active_user', user.id);
+            bukaAplikasi();
         });
-
         function bukaAplikasi() {
+            if (!akunAktif) return;
             document.getElementById('login-modal').style.display = 'none';
             document.getElementById('app-content').classList.remove('hidden');
             renderSemua();
+            terapkanHakAkses();
         }
-
         function logoutApp() {
-            sessionStorage.removeItem('biztren_pesantren_8t_login');
+            sessionStorage.removeItem('bp_active_user');
+            akunAktif = null;
             location.reload();
+        }
+        function penugasanMasihAktif(user) {
+            if (!user || !user.tugas || !user.aktif) return false;
+            if (!user.batas) return true;
+            return user.batas >= tanggalHariIni();
+        }
+        function bolehAksesSection(id) {
+            if (!akunAktif) return false;
+            const role = akunAktif.role;
+            if (role === 'Super Admin') return true;
+            const map = {
+                'tahap-1': ['Bendahara','Bagian Pengajaran','Bagian Pengasuhan','Guru','Panitia'],
+                'tahap-2': ['Bagian Pengajaran','Bagian Pengasuhan','Guru'],
+                'tahap-3': ['Bendahara'], 'tahap-4': ['Bendahara'], 'tahap-5': ['Bagian Pengajaran','Guru'],
+                'tahap-6': ['Bendahara'], 'tahap-7': [], 'tahap-8': ['Bendahara','Bagian Pengajaran','Bagian Pengasuhan'],
+                'tahap-9': ['Bendahara'], 'tahap-10': []
+            };
+            if (id === 'tahap-9' && (role === 'Panitia' || penugasanMasihAktif(akunAktif))) return true;
+            return (map[id] || []).includes(role);
+        }
+        function terapkanHakAkses() {
+            document.querySelectorAll('main section[id^="tahap-"]').forEach(sec => sec.classList.toggle('hidden', !bolehAksesSection(sec.id)));
+            document.querySelectorAll('nav a[href^="#tahap-"]').forEach(a => {
+                const id = a.getAttribute('href').slice(1);
+                a.classList.toggle('hidden', !bolehAksesSection(id));
+            });
+            document.getElementById('session-role-text').textContent = `Login: ${akunAktif.nama} • Jabatan utama: ${akunAktif.role}`;
+            const tugas = akunAktif.tugas ? `Penugasan: ${akunAktif.tugas}${akunAktif.batas ? ' (s.d. '+akunAktif.batas+')' : ''}` : 'Tidak ada penugasan tambahan';
+            document.getElementById('session-task-text').textContent = tugas;
+            const first = [...document.querySelectorAll('main section[id^="tahap-"]')].find(x => !x.classList.contains('hidden'));
+            if (first) first.scrollIntoView({behavior:'instant',block:'start'});
         }
 
         function bukaModalProfil() {
+            if (akunAktif?.role !== 'Super Admin') { alert('Hanya Super Admin yang dapat mengubah profil pesantren.'); return; }
             const modal = document.getElementById('modal-profil');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -529,6 +665,11 @@
         let tabunganList = JSON.parse(localStorage.getItem('bp_tabungan')) || [];
         let nilaiList = JSON.parse(localStorage.getItem('bp_nilai')) || [];
         let kasList = JSON.parse(localStorage.getItem('bp_kas')) || [];
+        let tagihanList = JSON.parse(localStorage.getItem('bp_tagihan')) || [];
+        // Migrasi ringan untuk data lama; seluruh data tetap berada di LocalStorage.
+        santriList = santriList.map((x, i) => ({...x, id: x.id || `santri-${x.nis || i}`, pinWali: x.pinWali || ""}));
+        localStorage.setItem('bp_santri', JSON.stringify(santriList));
+
 
         // UPLOAD LOGO MANDIRI TANPA MASUK REPO
         document.getElementById('input-logo-file').addEventListener('change', function(e) {
@@ -664,17 +805,31 @@
                 ? `Rekening: ${profilPondok.bank || '-'} • ${profilPondok.rekening || '-'}`
                 : "";
             document.getElementById('teks-rekening-aktif').textContent = infoRek;
+            const sppInfo = document.getElementById('spp-info-rekening');
+            if (sppInfo) sppInfo.textContent = infoRek || "Rekening belum diatur. Lengkapi profil pesantren.";
         }
 
         // TAHAP 2: SANTRI
         document.getElementById('form-santri').addEventListener('submit', function(e) {
             e.preventDefault();
+            const nis = document.getElementById('s-nis').value.trim();
+            const pinWali = document.getElementById('s-pin-wali').value.trim();
+            if (santriList.some(x => x.nis.toLowerCase() === nis.toLowerCase())) {
+                alert("NIS sudah terdaftar. Gunakan NIS yang berbeda.");
+                return;
+            }
+            if (!/^\d{6,12}$/.test(pinWali)) {
+                alert("PIN wali harus berupa 6–12 digit angka.");
+                return;
+            }
             santriList.push({
-                nis: document.getElementById('s-nis').value.trim(),
+                id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()),
+                nis,
                 nama: document.getElementById('s-nama').value.trim(),
                 kelas: document.getElementById('s-kelas').value.trim(),
                 kamar: document.getElementById('s-kamar').value.trim(),
-                wa: document.getElementById('s-wa').value.trim()
+                wa: document.getElementById('s-wa').value.trim(),
+                pinWali
             });
             this.reset();
             renderSantri();
@@ -699,11 +854,11 @@
             }
             tb.innerHTML = santriList.map((s, i) => `
                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                    <td class="p-3 font-mono text-xs text-slate-600">${s.nis}</td>
-                    <td class="p-3 font-semibold text-slate-900">${s.nama}</td>
-                    <td class="p-3 text-slate-700">${s.kelas}</td>
-                    <td class="p-3 text-slate-700">${s.kamar}</td>
-                    <td class="p-3 font-mono text-xs text-slate-600">${s.wa}</td>
+                    <td class="p-3 font-mono text-xs text-slate-600">${escapeHTML(s.nis)}</td>
+                    <td class="p-3 font-semibold text-slate-900">${escapeHTML(s.nama)}</td>
+                    <td class="p-3 text-slate-700">${escapeHTML(s.kelas)}</td>
+                    <td class="p-3 text-slate-700">${escapeHTML(s.kamar)}</td>
+                    <td class="p-3 font-mono text-xs text-slate-600">${escapeHTML(s.wa)}</td>
                     <td class="p-3 text-right">
                         <button type="button" onclick="hapusSantri(${i})" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Hapus</button>
                     </td>
@@ -716,6 +871,7 @@
             e.preventDefault();
             sppList.unshift({
                 nama: document.getElementById('spp-santri').value,
+                nis: (santriList.find(x => x.nama === document.getElementById('spp-santri').value) || {}).nis || "",
                 bulan: document.getElementById('spp-bulan').value.trim(),
                 nominal: Number(document.getElementById('spp-nominal').value) || 0,
                 status: document.getElementById('spp-status').value,
@@ -746,8 +902,8 @@
             document.getElementById('cetak-judul').innerText = "BUKTI PEMBAYARAN SPP / SYAHRIAH";
             document.getElementById('cetak-pondok').innerText = profilPondok.nama || "Biztren Cloud – Modul Pesantren";
             document.getElementById('cetak-isi').innerHTML = `
-                <div class="flex justify-between border-b pb-2"><span class="text-slate-500">Nama Santri:</span><span class="font-bold">${item.nama}</span></div>
-                <div class="flex justify-between border-b pb-2"><span class="text-slate-500">Periode Bulan:</span><span class="font-semibold">${item.bulan}</span></div>
+                <div class="flex justify-between border-b pb-2"><span class="text-slate-500">Nama Santri:</span><span class="font-bold">${escapeHTML(item.nama)}</span></div>
+                <div class="flex justify-between border-b pb-2"><span class="text-slate-500">Periode Bulan:</span><span class="font-semibold">${escapeHTML(item.bulan)}</span></div>
                 <div class="flex justify-between border-b pb-2"><span class="text-slate-500">Tanggal Catat:</span><span>${item.tanggal}</span></div>
                 <div class="flex justify-between border-b pb-2"><span class="text-slate-500">Rekening Tujuan:</span><span class="font-medium">${rekText}</span></div>
                 <div class="flex justify-between border-b pb-2"><span class="text-slate-500">Status:</span><span class="font-bold">${item.status}</span></div>
@@ -770,8 +926,8 @@
                 const lunas = item.status === "Lunas";
                 return `
                     <tr class="border-b border-slate-100 hover:bg-slate-50">
-                        <td class="p-3 font-semibold text-slate-900">${item.nama}</td>
-                        <td class="p-3 text-slate-600">${item.bulan}</td>
+                        <td class="p-3 font-semibold text-slate-900">${escapeHTML(item.nama)}</td>
+                        <td class="p-3 text-slate-600">${escapeHTML(item.bulan)}</td>
                         <td class="p-3 text-right font-bold text-slate-800">${formatRupiah(item.nominal)}</td>
                         <td class="p-3">
                             <button type="button" onclick="toggleStatusSPP(${i})" class="${lunas ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'} px-2.5 py-1 rounded-full text-xs font-bold">
@@ -793,6 +949,7 @@
             tabunganList.push({
                 tanggal: tanggalHariIni(),
                 nama: document.getElementById('tab-santri').value,
+                nis: (santriList.find(x => x.nama === document.getElementById('tab-santri').value) || {}).nis || "",
                 jenis: document.getElementById('tab-jenis').value,
                 nominal: Number(document.getElementById('tab-nominal').value) || 0,
                 keterangan: document.getElementById('tab-ket').value.trim()
@@ -856,6 +1013,7 @@
             e.preventDefault();
             nilaiList.unshift({
                 nama: document.getElementById('nil-santri').value,
+                nis: (santriList.find(x => x.nama === document.getElementById('nil-santri').value) || {}).nis || "",
                 mapel: document.getElementById('nil-mapel').value.trim(),
                 semester: document.getElementById('nil-semester').value.trim(),
                 nilai: Number(document.getElementById('nil-angka').value) || 0
@@ -885,9 +1043,9 @@
             }
             tb.innerHTML = nilaiList.map((n, i) => `
                 <tr class="border-b border-slate-100 hover:bg-slate-50">
-                    <td class="p-3 font-semibold text-slate-900">${n.nama}</td>
-                    <td class="p-3 text-slate-700">${n.mapel}</td>
-                    <td class="p-3 text-slate-600">${n.semester}</td>
+                    <td class="p-3 font-semibold text-slate-900">${escapeHTML(n.nama)}</td>
+                    <td class="p-3 text-slate-700">${escapeHTML(n.mapel)}</td>
+                    <td class="p-3 text-slate-600">${escapeHTML(n.semester)}</td>
                     <td class="p-3 text-center font-extrabold text-indigo-700">${n.nilai}</td>
                     <td class="p-3 text-center"><span class="bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full text-xs font-semibold">${predikatNilai(n.nilai)}</span></td>
                     <td class="p-3 text-right"><button type="button" onclick="hapusNilai(${i})" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Hapus</button></td>
@@ -939,9 +1097,9 @@
                 return `
                     <tr class="border-b border-slate-100 hover:bg-slate-50">
                         <td class="p-3 text-xs text-slate-600">${k.tanggal}</td>
-                        <td class="p-3"><span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full text-xs font-semibold">${k.unit}</span></td>
-                        <td class="p-3"><span class="${isMasuk ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'} px-2.5 py-1 rounded-full text-xs font-semibold">${k.jenis}</span></td>
-                        <td class="p-3 text-slate-700">${k.uraian}</td>
+                        <td class="p-3"><span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full text-xs font-semibold">${escapeHTML(k.unit)}</span></td>
+                        <td class="p-3"><span class="${isMasuk ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'} px-2.5 py-1 rounded-full text-xs font-semibold">${escapeHTML(k.jenis)}</span></td>
+                        <td class="p-3 text-slate-700">${escapeHTML(k.uraian)}</td>
                         <td class="p-3 text-right font-bold ${isMasuk ? 'text-emerald-700' : 'text-rose-600'}">${formatRupiah(k.nominal)}</td>
                         <td class="p-3 text-right"><button type="button" onclick="hapusKas(${i})" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Hapus</button></td>
                     </tr>
@@ -949,43 +1107,99 @@
             }).join('');
         }
 
-        // TAHAP 7: PORTAL WALI SANTRI
-        function renderPortalWali() {
-            const nama = document.getElementById('wali-pilih-santri').value;
-            const card = document.getElementById('portal-wali-card');
-            if (!nama) {
-                card.innerHTML = "Silakan pilih santri terlebih dahulu untuk melihat ringkasan informasi wali santri.";
+        // TAHAP 7: PORTAL WALI SANTRI - autentikasi lokal (bukan autentikasi server)
+        document.getElementById('form-login-wali').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nis = document.getElementById('wali-nis-login').value.trim();
+            const pin = document.getElementById('wali-pin-login').value.trim();
+            const santri = santriList.find(x => String(x.nis).toLowerCase() === nis.toLowerCase());
+            const error = document.getElementById('wali-login-error');
+            if (!santri || !santri.pinWali || santri.pinWali !== pin) {
+                error.textContent = "NIS atau PIN tidak cocok. Pastikan admin sudah mendaftarkan PIN wali.";
+                error.classList.remove('hidden');
+                document.getElementById('portal-wali-card').textContent = "Akses belum diberikan.";
                 return;
             }
-            const s = santriList.find(x => x.nama === nama) || {};
-            const sppSantri = sppList.filter(x => x.nama === nama);
-            const saldoTab = hitungSaldoTabunganSantri(nama);
-            const nilaiSantri = nilaiList.filter(x => x.nama === nama);
-            const rataNilai = nilaiSantri.length
-                ? (nilaiSantri.reduce((a, b) => a + b.nilai, 0) / nilaiSantri.length).toFixed(1)
-                : "-";
+            error.classList.add('hidden');
+            tampilkanPortalWali(santri);
+        });
 
+        function renderPortalWali() {
+            document.getElementById('portal-wali-card').textContent =
+                "Portal wali menggunakan login NIS dan PIN. Silakan login untuk melihat informasi santri.";
+        }
+
+        document.getElementById('form-tagihan').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const role = akunAktif?.role;
+            const penugasanAktif = penugasanMasihAktif(akunAktif);
+            const namaTagihan = document.getElementById('tagihan-nama').value.trim();
+            if (!['Super Admin','Bendahara'].includes(role) && !(penugasanAktif && namaTagihan.toLowerCase() === akunAktif.tugas.toLowerCase())) { alert('Akses panitia hanya untuk tagihan kegiatan yang sesuai dengan nama penugasan aktif.'); return; }
+            const nis = document.getElementById('tagihan-santri').value;
+            const santri = santriList.find(x => x.nis === nis);
+            if (!santri) return alert('Pilih santri yang valid.');
+            tagihanList.push({id:'tag-'+Date.now(), jenis:document.getElementById('tagihan-jenis').value, nama:document.getElementById('tagihan-nama').value.trim(), nis:santri.nis, santri:santri.nama, periode:document.getElementById('tagihan-periode').value.trim(), nominal:Number(document.getElementById('tagihan-nominal').value), status:'Belum Lunas', tanggal:tanggalHariIni()});
+            localStorage.setItem('bp_tagihan', JSON.stringify(tagihanList)); this.reset(); renderTagihan();
+        });
+        function renderTagihan() {
+            const select = document.getElementById('tagihan-santri');
+            if (select) select.innerHTML = '<option value="">Pilih santri</option>' + santriList.map(x=>`<option value="${escapeHTML(x.nis)}">${escapeHTML(x.nama)} — ${escapeHTML(x.nis)}</option>`).join('');
+            const body = document.getElementById('tabel-tagihan'); if (!body) return;
+            const dataTampil = (akunAktif && !['Super Admin','Bendahara'].includes(akunAktif.role)) ? tagihanList.filter(x => penugasanMasihAktif(akunAktif) && x.nama.toLowerCase() === akunAktif.tugas.toLowerCase()) : tagihanList;
+            body.innerHTML = dataTampil.map(x=>`<tr class="border-b border-slate-100"><td class="p-3">${escapeHTML(x.jenis)}</td><td class="p-3">${escapeHTML(x.nama)}</td><td class="p-3">${escapeHTML(x.santri)}</td><td class="p-3">${escapeHTML(x.periode || '-')}</td><td class="p-3 text-right">${formatRupiah(x.nominal)}</td><td class="p-3">${escapeHTML(x.status)}</td><td class="p-3 text-right whitespace-nowrap">${x.status !== 'Lunas' ? `<button onclick="ubahStatusTagihan('${x.id}')" class="text-emerald-700 font-semibold mr-2">Verifikasi Lunas</button>` : ''}<button onclick="hapusTagihan('${x.id}')" class="text-rose-600 font-semibold">Hapus</button></td></tr>`).join('') || '<tr><td colspan="7" class="p-4 text-center text-slate-400">Belum ada tagihan lain.</td></tr>';
+        }
+        function ubahStatusTagihan(id) { if (!['Super Admin','Bendahara'].includes(akunAktif?.role)) return alert('Hanya Bendahara atau Super Admin yang dapat memverifikasi pembayaran.'); const x=tagihanList.find(a=>a.id===id); if(x){x.status='Lunas';x.verifikasiOleh=akunAktif.nama;localStorage.setItem('bp_tagihan',JSON.stringify(tagihanList));renderTagihan();} }
+        function hapusTagihan(id) { if (!['Super Admin','Bendahara'].includes(akunAktif?.role)) return alert('Hanya Bendahara atau Super Admin yang dapat menghapus tagihan.'); if(confirm('Hapus tagihan ini?')){tagihanList=tagihanList.filter(x=>x.id!==id);localStorage.setItem('bp_tagihan',JSON.stringify(tagihanList));renderTagihan();} }
+        document.getElementById('form-user').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (akunAktif?.role !== 'Super Admin') return alert('Hanya Super Admin yang dapat mengelola akun.');
+            const nama=document.getElementById('user-nama').value.trim(), username=document.getElementById('user-username').value.trim().toLowerCase(), password=document.getElementById('user-password').value;
+            if (akunList.some(x=>x.username.toLowerCase()===username)) return alert('Username sudah digunakan.');
+            const tugas=document.getElementById('user-tugas').value.trim();
+            const batas=document.getElementById('user-batas').value;
+            akunList.push({id:'usr-'+Date.now(),nama,username,password,role:document.getElementById('user-role').value,tugas,batas,aktif:true});
+            localStorage.setItem('bp_users',JSON.stringify(akunList)); this.reset(); renderUsers(); alert('Akun berhasil dibuat. Sampaikan username dan password awal kepada pemilik akun secara pribadi. Password tidak ditampilkan kembali; jika lupa, buatkan password baru.');
+        });
+        function renderUsers() {
+            const body=document.getElementById('tabel-user'); if(!body)return;
+            body.innerHTML=akunList.map(u=>`<tr class="border-b border-slate-100"><td class="p-3">${escapeHTML(u.nama)}</td><td class="p-3">${escapeHTML(u.username)}</td><td class="p-3">${escapeHTML(u.role)}</td><td class="p-3">${escapeHTML(u.tugas || '-')} ${u.batas ? '<small>(s.d. '+escapeHTML(u.batas)+')</small>' : ''}</td><td class="p-3">${!u.aktif?'Nonaktif':(u.tugas && u.batas && u.batas < tanggalHariIni()?'Penugasan berakhir':'Aktif')}</td><td class="p-3 text-right">${u.id!=='usr-superadmin'?`<div class="flex flex-col items-end gap-1"><button onclick="resetPasswordUser('${u.id}')" class="text-blue-700 font-semibold">Reset password</button><button onclick="toggleUser('${u.id}')" class="text-emerald-700 font-semibold">${u.aktif?'Nonaktifkan':'Aktifkan'}</button></div>`:'Akun utama'}</td></tr>`).join('');
+        }
+        function resetPasswordUser(id){
+            if(akunAktif?.role!=='Super Admin') return alert('Hanya Super Admin yang dapat mereset password.');
+            const u=akunList.find(x=>x.id===id); if(!u) return;
+            const baru=prompt('Masukkan password baru untuk '+u.nama+' (minimal 6 karakter). Password lama tidak dapat dilihat.');
+            if(baru===null) return;
+            if(baru.length<6) return alert('Password minimal 6 karakter.');
+            u.password=baru; localStorage.setItem('bp_users',JSON.stringify(akunList));
+            alert('Password berhasil diganti. Sampaikan password baru kepada pemilik akun secara pribadi.');
+        }
+        function toggleUser(id){if(akunAktif?.role!=='Super Admin')return alert('Akses ditolak.');const u=akunList.find(x=>x.id===id);if(!u)return;if(u.id===akunAktif.id)return alert('Akun yang sedang digunakan tidak dapat dinonaktifkan.');u.aktif=!u.aktif;localStorage.setItem('bp_users',JSON.stringify(akunList));renderUsers();}
+
+        function tampilkanPortalWali(s) {
+            const sppSantri = sppList.filter(x => x.nis ? x.nis === s.nis : x.nama === s.nama);
+            const tabunganSantri = tabunganList.filter(x => x.nis ? x.nis === s.nis : x.nama === s.nama);
+            const nilaiSantri = nilaiList.filter(x => x.nis ? x.nis === s.nis : x.nama === s.nama);
+            const saldo = tabunganSantri.reduce((a, x) => a + (x.jenis === "Setoran" ? Number(x.nominal) : -Number(x.nominal)), 0);
+            const rata = nilaiSantri.length ? (nilaiSantri.reduce((a, x) => a + Number(x.nilai), 0) / nilaiSantri.length).toFixed(1) : "-";
+            const card = document.getElementById('portal-wali-card');
             card.innerHTML = `
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-slate-800">
-                    <div class="bg-white p-4 rounded-xl border border-slate-200">
-                        <p class="text-xs text-slate-500">Santri & Kamar</p>
-                        <p class="font-bold text-base mt-1">${s.nama}</p>
-                        <p class="text-xs text-emerald-700 mt-0.5">${s.kelas || '-'} • ${s.kamar || '-'}</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-200">
-                        <p class="text-xs text-slate-500">Catatan SPP</p>
-                        <p class="font-bold text-base mt-1">${sppSantri.filter(x => x.status === 'Lunas').length} Lunas / ${sppSantri.length} Tercatat</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-200">
-                        <p class="text-xs text-slate-500">Saldo Tabungan</p>
-                        <p class="font-extrabold text-base text-amber-700 mt-1">${formatRupiah(saldoTab)}</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-200">
-                        <p class="text-xs text-slate-500">Rata-rata Nilai</p>
-                        <p class="font-extrabold text-base text-indigo-700 mt-1">${rataNilai}</p>
-                    </div>
+                <div class="flex items-center justify-between gap-3 mb-4">
+                    <div><p class="text-xs text-slate-500">Portal Wali Santri</p><h3 class="font-bold text-lg text-slate-900">${escapeHTML(s.nama)}</h3><p class="text-xs text-slate-600">${escapeHTML(s.nis)} • ${escapeHTML(s.kelas)} • ${escapeHTML(s.kamar)}</p></div>
+                    <button type="button" onclick="renderPortalWali()" class="text-xs bg-slate-200 px-3 py-2 rounded-lg">Keluar Portal</button>
                 </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="bg-white p-4 rounded-xl border"><p class="text-xs text-slate-500">SPP/Syahriah</p><p class="font-bold">${sppSantri.filter(x=>x.status==="Lunas").length} lunas dari ${sppSantri.length} tagihan</p></div>
+                    <div class="bg-white p-4 rounded-xl border"><p class="text-xs text-slate-500">Saldo Tabungan</p><p class="font-bold text-amber-700">${formatRupiah(saldo)}</p></div>
+                    <div class="bg-white p-4 rounded-xl border"><p class="text-xs text-slate-500">Rata-rata Nilai</p><p class="font-bold text-indigo-700">${rata}</p></div>
+                </div>
+                <div class="mt-4 bg-white rounded-xl border p-4"><h4 class="font-bold mb-2">Rincian SPP</h4>${sppSantri.length ? sppSantri.map(x=>`<p class="text-xs py-1 border-b">${escapeHTML(x.bulan)} — ${formatRupiah(x.nominal)} — ${escapeHTML(x.status)}</p>`).join('') : '<p class="text-xs text-slate-500">Belum ada tagihan.</p>'}</div>
+                <div class="mt-4 bg-white rounded-xl border p-4"><h4 class="font-bold mb-2">Nilai Akademik</h4>${nilaiSantri.length ? nilaiSantri.map(x=>`<p class="text-xs py-1 border-b">${escapeHTML(x.mapel)} (${escapeHTML(x.semester)}): <b>${Number(x.nilai)}</b></p>`).join('') : '<p class="text-xs text-slate-500">Belum ada nilai.</p>'}</div>
+                <p class="text-[11px] text-amber-700 mt-4">Catatan: portal ini berjalan lokal di perangkat admin. PIN dan data tidak terlindungi oleh server; jangan dipublikasikan sebagai portal wali online sebelum backend dan aturan keamanan tersedia.</p>
             `;
+        }
+
+        function escapeHTML(value) {
+            return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         }
 
         // TAHAP 8: NOTIFIKASI WHATSAPP
@@ -1004,19 +1218,20 @@
             let pesan = `Assalamu'alaikum Wr. Wb. Yth. Wali Santri dari *${nama}* (${pondok}).\n`;
 
             if (topik === "spp") {
-                const sppItem = sppList.find(x => x.nama === nama);
+                const santriTerpilih = santriList.find(x => x.nama === nama);
+                const sppItem = sppList.find(x => santriTerpilih && x.nis ? x.nis === santriTerpilih.nis : x.nama === nama);
                 const infoRek = (profilPondok.bank || profilPondok.rekening)
                     ? `\nRekening pembayaran: *${profilPondok.bank || ''} ${profilPondok.rekening || ''}*`
                     : "";
                 pesan += sppItem
-                    ? `Informasi SPP/Syahriah periode *${sppItem.bulan}*: Nominal *${formatRupiah(sppItem.nominal)}* dengan status *${sppItem.status}*.${infoRek}`
+                    ? `Informasi tagihan SPP/Syahriah periode *${sppItem.bulan}*: Nominal *${formatRupiah(sppItem.nominal)}*, status *${sppItem.status}*.${infoRek}\nMohon kirim bukti transfer kepada bendahara untuk verifikasi. Pembayaran belum dianggap lunas sebelum dikonfirmasi pondok.`
                     : `Silakan konfirmasi administrasi SPP/Syahriah ananda *${nama}* ke bagian keuangan pondok.${infoRek}`;
             } else if (topik === "tabungan") {
                 pesan += `Saldo tabungan ananda *${nama}* saat ini sebesar *${formatRupiah(hitungSaldoTabunganSantri(nama))}*.`;
             } else {
                 const nilaiS = nilaiList.filter(x => x.nama === nama);
                 if (nilaiS.length) {
-                    const ringkas = nilaiS.map(n => `${n.mapel}: ${n.nilai}`).join(", ");
+                    const ringkas = nilaiS.map(n => `${escapeHTML(n.mapel)}: ${n.nilai}`).join(", ");
                     pesan += `Capaian nilai akademik ananda *${nama}*: ${ringkas}.`;
                 } else {
                     pesan += `Belum ada input nilai akademik terbaru untuk ananda *${nama}*.`;
@@ -1044,13 +1259,13 @@
 
         function sinkronSelect() {
             const opts = '<option value="">-- Pilih Santri --</option>' +
-                santriList.map(s => `<option value="${s.nama}">${s.nama} (${s.kelas} • ${s.kamar})</option>`).join('');
+                santriList.map(s => `<option value="${escapeHTML(s.nama)}">${escapeHTML(s.nama)} — ${escapeHTML(s.nis)} (${escapeHTML(s.kelas)} • ${escapeHTML(s.kamar)})</option>`).join('');
             document.getElementById('spp-santri').innerHTML = opts;
             document.getElementById('tab-santri').innerHTML = opts;
             document.getElementById('nil-santri').innerHTML = opts;
-            document.getElementById('wali-pilih-santri').innerHTML = '<option value="">-- Pilih Santri untuk Tampilan Wali --</option>' +
-                santriList.map(s => `<option value="${s.nama}">${s.nama} (${s.kelas} • ${s.kamar})</option>`).join('');
             document.getElementById('wa-santri').innerHTML = opts;
+            const tagSelect = document.getElementById('tagihan-santri');
+            if (tagSelect) tagSelect.innerHTML = '<option value="">Pilih santri</option>' + santriList.map(s => `<option value="${escapeHTML(s.nis)}">${escapeHTML(s.nama)} — ${escapeHTML(s.nis)}</option>`).join('');
         }
 
         function updateDashboard() {
@@ -1075,6 +1290,8 @@
             renderNilai();
             renderKas();
             renderPortalWali();
+            renderTagihan();
+            renderUsers();
             updateDashboard();
         }
     </script>
