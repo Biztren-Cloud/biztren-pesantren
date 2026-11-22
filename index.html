@@ -462,10 +462,9 @@
                 <p class="text-emerald-200 text-sm mb-2">Selamat datang di sistem administrasi</p>
 
                 <h1 id="judul-dashboard-pondok"
-                    class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight max-w-2xl">
+                    class="text-2xl md:text-4xl font-bold tracking-tight leading-tight">
                     Portal Administrasi Pondok Pesantren
                 </h1>
-
                 <p id="subjudul-dashboard-pondok"
                     class="text-emerald-100/75 text-sm md:text-base mt-4 max-w-xl leading-relaxed">
                     Biztren Cloud — Modul Manajemen Pesantren
@@ -1239,11 +1238,13 @@ if (formProfil) {
 // =====================================================
 // TAMPILKAN PROFIL PESANTREN
 // =====================================================
+
 function renderProfil() {
     const isi = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.value = value || '';
     };
+
     isi('profil-nama', profilPondok.nama);
     isi('profil-pengasuh', profilPondok.pengasuh);
     isi('profil-bendahara', profilPondok.bendahara);
@@ -1251,38 +1252,59 @@ function renderProfil() {
     isi('profil-rekening', profilPondok.rekening);
     isi('profil-kontak', profilPondok.kontak);
     isi('profil-alamat', profilPondok.alamat);
+
     renderLogo();
+
     const namaPondok =
-        profilPondok.nama || 'Portal Administrasi Pondok Pesantren';
-    const namaNavbar =
-        profilPondok.nama || 'Biztren Pesantren';
+        profilPondok.nama || 'Portal Administrasi Pesantren';
+
     const teks = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.textContent = value;
     };
-    teks('nav-nama-pondok', namaNavbar);
+
+    teks('nav-nama-pondok', namaPondok);
     teks('judul-dashboard-pondok', namaPondok);
-    const detailBaris = [
-        profilPondok.pengasuh ? `Pimpinan: ${profilPondok.pengasuh}` : '',
-        profilPondok.bendahara ? `Bendahara: ${profilPondok.bendahara}` : '',
-        profilPondok.alamat || ''
-    ].filter(Boolean);
+
+    // Identitas produk saja, tidak dicampur dengan data pengurus
     teks(
         'subjudul-dashboard-pondok',
-        detailBaris.length
-            ? `Biztren Cloud – Modul Pesantren • ${detailBaris.join(' • ')}`
-            : 'Biztren Cloud – Modul Pesantren'
+        'Biztren Cloud | Sistem Manajemen Pesantren'
     );
-    teks(
-        'teks-profil-aktif',
-        profilPondok.nama
-            ? `${profilPondok.nama}${profilPondok.alamat ? ' — ' + profilPondok.alamat : ''}${profilPondok.kontak ? ' • WA: ' + profilPondok.kontak : ''}`
-            : 'Profil belum dilengkapi. Klik tombol Lengkapi Profil untuk mengisi identitas pesantren.'
-    );
+
+    if (typeof renderSidebarBrand === 'function') {
+        renderSidebarBrand();
+    }
+
+    // Informasi profil ditampilkan terpisah
+    const detailProfil = [
+        profilPondok.pengasuh
+            ? 'Pimpinan: ' + profilPondok.pengasuh : '',
+        profilPondok.bendahara
+            ? 'Bendahara: ' + profilPondok.bendahara : '',
+        profilPondok.alamat
+            ? 'Alamat: ' + profilPondok.alamat : '',
+        profilPondok.kontak
+            ? 'WhatsApp: ' + profilPondok.kontak : ''
+    ].filter(Boolean);
+
+    const elProfil = document.getElementById('teks-profil-aktif');
+
+    if (elProfil) {
+        elProfil.textContent = profilPondok.nama
+            ? detailProfil.join(' | ')
+            : 'Profil belum dilengkapi. Silakan lengkapi identitas pesantren.';
+    }
+
     const infoRek = (profilPondok.bank || profilPondok.rekening)
-        ? `Rekening: ${profilPondok.bank || '-'} • ${profilPondok.rekening || '-'}`
+        ? 'Rekening: ' +
+          (profilPondok.bank || '-') +
+          ' | ' +
+          (profilPondok.rekening || '-')
         : '';
+
     teks('teks-rekening-aktif', infoRek);
+
     teks(
         'spp-info-rekening',
         infoRek || 'Rekening belum diatur. Lengkapi profil pesantren.'
