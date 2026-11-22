@@ -439,56 +439,188 @@
         <main class="bp-main bp-main-content px-5 md:px-7 pt-24 pb-12 space-y-7">
             <div id="session-role-banner" class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-xs text-emerald-900 flex flex-wrap justify-between gap-2"><span id="session-role-text">Akun aktif</span><span id="session-task-text"></span></div>
 
-            <!-- TAHAP 1: DASHBOARD & TOMBOL LENGKAPI PROFIL -->
-            <section id="tahap-1" class="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl space-y-6">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-100 pb-5 gap-4">
-                    <div>
-                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200">
-                            ● Mode Lokal Aktif — Data tersimpan di browser ini
-                        </span>
-                        <h1 id="judul-dashboard-pondok" class="text-2xl md:text-4xl font-extrabold text-slate-900 mt-2">
-                            Portal Administrasi Pondok Pesantren
-                        </h1>
-                        <p id="subjudul-dashboard-pondok" class="text-xs md:text-sm text-slate-500 mt-1">
-                            Biztren Cloud – Modul Pesantren
-                        </p>
-                    </div>
-                    <button type="button" onclick="bukaModalProfil()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-3 rounded-xl text-xs md:text-sm shadow-md transition shrink-0">
-                        ⚙️ Lengkapi Profil
+            
+<!-- DASHBOARD UTAMA BIZTREN PESANTREN -->
+<section id="tahap-1" class="space-y-6">
+
+    <!-- HERO / IDENTITAS PONDOK -->
+    <div class="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#092f27] via-[#105443] to-[#16745a] p-7 md:p-10 text-white shadow-xl">
+
+        <div class="absolute -right-16 -top-20 w-80 h-80 rounded-full border-[45px] border-white/[0.04]"></div>
+        <div class="absolute right-24 -bottom-36 w-80 h-80 rounded-full bg-emerald-300/10 blur-3xl"></div>
+
+        <div class="relative z-10 flex flex-col lg:flex-row justify-between gap-8">
+
+            <div class="flex-1">
+                <div class="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/15 px-4 py-2 mb-7">
+                    <span class="w-2 h-2 rounded-full bg-emerald-300"></span>
+                    <span class="text-[10px] md:text-xs font-semibold tracking-[0.15em] uppercase text-emerald-100">
+                        Biztren Cloud · Pesantren Management
+                    </span>
+                </div>
+
+                <p class="text-emerald-200 text-sm mb-2">Selamat datang di sistem administrasi</p>
+
+                <h1 id="judul-dashboard-pondok"
+                    class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight max-w-2xl">
+                    Portal Administrasi Pondok Pesantren
+                </h1>
+
+                <p id="subjudul-dashboard-pondok"
+                    class="text-emerald-100/75 text-sm md:text-base mt-4 max-w-xl leading-relaxed">
+                    Biztren Cloud — Modul Manajemen Pesantren
+                </p>
+
+                <div class="flex flex-wrap items-center gap-3 mt-7">
+                    <span class="inline-flex items-center gap-2 text-xs text-emerald-100/80">
+                        <span class="w-2 h-2 rounded-full bg-emerald-300"></span>
+                        Mode Lokal Aktif
+                    </span>
+                    <span class="text-emerald-100/30">|</span>
+                    <span class="text-xs text-emerald-100/70">
+                        Data tersimpan pada perangkat ini
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex flex-col justify-end gap-3 lg:min-w-[220px]">
+                <div class="rounded-2xl bg-white/10 border border-white/15 p-4 backdrop-blur-sm">
+                    <p class="text-[10px] uppercase tracking-widest text-emerald-100/70">
+                        Pengaturan Identitas
+                    </p>
+                    <p class="font-bold text-sm mt-1">Profil Pesantren</p>
+                    <p class="text-xs text-emerald-100/70 mt-1">
+                        Kelola nama, logo, alamat dan rekening
+                    </p>
+                    <button type="button" onclick="bukaModalProfil()"
+                        class="mt-4 w-full rounded-xl bg-white text-emerald-950 hover:bg-emerald-50 px-4 py-3 text-xs font-bold transition">
+                        ⚙ Lengkapi Profil
                     </button>
                 </div>
+            </div>
 
-                <!-- 4 Kartu Ringkasan Data Nyata -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-slate-900 text-white p-5 rounded-2xl border border-slate-800">
-                        <span class="text-xs text-slate-400">Jumlah Santri Aktif</span>
-                        <h3 id="dash-total-santri" class="text-3xl font-extrabold text-emerald-400 mt-1">0 Santri</h3>
-                        <p class="text-[11px] text-slate-400 mt-1">Dari data santri terdaftar</p>
-                    </div>
-                    <div class="bg-slate-900 text-white p-5 rounded-2xl border border-slate-800">
-                        <span class="text-xs text-slate-400">Pembayaran SPP/Syahriah</span>
-                        <h3 id="dash-spp-persen" class="text-3xl font-extrabold text-blue-400 mt-1">0%</h3>
-                        <p id="dash-spp-detail" class="text-[11px] text-slate-400 mt-1">0 dari 0 tagihan lunas</p>
-                    </div>
-                    <div class="bg-slate-900 text-white p-5 rounded-2xl border border-slate-800">
-                        <span class="text-xs text-slate-400">Saldo Tabungan Santri</span>
-                        <h3 id="dash-total-tabungan" class="text-2xl font-extrabold text-amber-400 mt-1">Rp 0</h3>
-                        <p class="text-[11px] text-slate-400 mt-1">Setoran dikurangi penarikan</p>
-                    </div>
-                    <div class="bg-slate-900 text-white p-5 rounded-2xl border border-slate-800">
-                        <span class="text-xs text-slate-400">Saldo Buku Kas</span>
-                        <h3 id="dash-saldo-kas" class="text-2xl font-extrabold text-indigo-400 mt-1">Rp 0</h3>
-                        <p class="text-[11px] text-slate-400 mt-1">Kas pesantren & asrama</p>
-                    </div>
+        </div>
+    </div>
+
+    <!-- JUDUL RINGKASAN -->
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 px-1">
+        <div>
+            <p class="text-[10px] font-bold tracking-[0.18em] uppercase text-emerald-700">
+                Overview
+            </p>
+            <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 mt-1">
+                Ringkasan Pesantren
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">
+                Gambaran singkat kondisi administrasi pesantren.
+            </p>
+        </div>
+        <span class="text-[11px] text-slate-400">
+            Data berdasarkan catatan administrasi
+        </span>
+    </div>
+
+    <!-- KARTU STATISTIK -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+
+        <!-- SANTRI -->
+        <div class="group bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-700 text-xl">
+                    ♙
                 </div>
+                <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                    Data Santri
+                </span>
+            </div>
+            <p class="text-xs text-slate-500 mt-5">Jumlah Santri Aktif</p>
+            <h3 id="dash-total-santri" class="text-3xl font-extrabold text-slate-900 mt-1">
+                0 Santri
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-2">
+                Dari data santri terdaftar
+            </p>
+        </div>
 
-                <!-- Ringkasan Singkat Profil & Rekening Aktif -->
-                <div id="ringkasan-profil-bar" class="bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3.5 text-xs text-slate-600 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <span id="teks-profil-aktif">Profil belum dilengkapi. Klik <strong>Lengkapi Profil</strong> untuk mengisi identitas & rekening.</span>
-                    <span id="teks-rekening-aktif" class="font-semibold text-emerald-700"></span>
+        <!-- SPP -->
+        <div class="group bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-blue-700 text-xl">
+                    ◷
                 </div>
-            </section>
+                <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                    Keuangan
+                </span>
+            </div>
+            <p class="text-xs text-slate-500 mt-5">Pembayaran SPP / Syahriah</p>
+            <h3 id="dash-spp-persen" class="text-3xl font-extrabold text-slate-900 mt-1">
+                0%
+            </h3>
+            <p id="dash-spp-detail" class="text-[11px] text-slate-400 mt-2">
+                0 dari 0 tagihan lunas
+            </p>
+        </div>
 
+        <!-- TABUNGAN -->
+        <div class="group bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center text-amber-700 text-xl">
+                    ◈
+                </div>
+                <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                    Simpanan
+                </span>
+            </div>
+            <p class="text-xs text-slate-500 mt-5">Saldo Tabungan Santri</p>
+            <h3 id="dash-total-tabungan" class="text-2xl font-extrabold text-slate-900 mt-2">
+                Rp 0
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-2">
+                Setoran dikurangi penarikan
+            </p>
+        </div>
+
+        <!-- KAS -->
+        <div class="group bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all">
+            <div class="flex items-center justify-between">
+                <div class="w-11 h-11 rounded-xl bg-violet-50 flex items-center justify-center text-violet-700 text-xl">
+                    ▤
+                </div>
+                <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                    Pembukuan
+                </span>
+            </div>
+            <p class="text-xs text-slate-500 mt-5">Saldo Buku Kas</p>
+            <h3 id="dash-saldo-kas" class="text-2xl font-extrabold text-slate-900 mt-2">
+                Rp 0
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-2">
+                Kas pesantren dan asrama
+            </p>
+        </div>
+
+    </div>
+
+    <!-- IDENTITAS & REKENING -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-700 text-lg">
+                ◉
+            </div>
+            <div>
+                <h3 class="font-bold text-slate-800 text-sm">Identitas dan Informasi Pembayaran</h3>
+                <p class="text-[11px] text-slate-400">Informasi resmi pondok pesantren</p>
+            </div>
+        </div>
+
+        <div class="border-t border-slate-100 pt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <span id="teks-profil-aktif" class="text-xs text-slate-600 leading-relaxed">
+                Profil belum dilengkapi. Silakan lengkapi identitas pesantren.
+            </span>
+            <span id="teks-rekening-aktif" class="text-xs font-bold text-emerald-700"></span>
+        </div>
+    </div>
+</section>
             <!-- TAHAP 2: DATA SANTRI, KELAS, KAMAR, DAN ASRAMA -->
             <section id="tahap-2" class="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl space-y-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-100 pb-4 gap-2">
