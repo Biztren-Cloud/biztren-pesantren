@@ -513,68 +513,81 @@
         </div>
     </div>
 
-    <!-- KONTEN IDENTITAS DAN REKENING -->
-    <div class="grid grid-cols-1 lg:grid-cols-2">
+    
+<!-- PANEL IDENTITAS DAN REKENING PESANTREN -->
+<div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
 
-        <!-- IDENTITAS PESANTREN -->
-        <div class="p-5 md:p-7 min-w-0">
+    <!-- HEADER -->
+    <div class="px-5 md:px-7 py-5 border-b border-slate-100 flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-700 text-xl shrink-0">
+            ◉
+        </div>
+        <div>
+            <h3 class="font-bold text-slate-800 text-sm md:text-base">
+                Informasi Pesantren
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">
+                Identitas kelembagaan dan informasi pembayaran resmi
+            </p>
+        </div>
+    </div>
 
-            <div class="flex items-center gap-3 mb-5">
-                <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-700">
-                    ▣
-                </div>
-                <div>
-                    <h4 class="text-xs font-extrabold tracking-wider text-slate-700 uppercase">
-                        Identitas Pesantren
-                    </h4>
-                    <p class="text-[11px] text-slate-400 mt-1">
-                        Data kelembagaan pesantren
-                    </p>
-                </div>
+    <!-- BAGIAN IDENTITAS PESANTREN -->
+    <div class="p-5 md:p-7">
+
+        <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-700">
+                ▣
             </div>
-
-            <div id="teks-profil-aktif"
-                class="space-y-0 rounded-xl border border-slate-100 bg-slate-50/70 px-4 md:px-5">
-                <p class="py-4 text-sm text-slate-500">
-                    Profil pesantren belum dilengkapi.
+            <div>
+                <h4 class="text-xs font-extrabold tracking-wider text-slate-700 uppercase">
+                    Identitas Pesantren
+                </h4>
+                <p class="text-[11px] text-slate-400 mt-1">
+                    Informasi resmi lembaga pesantren
                 </p>
             </div>
-
         </div>
 
-        <!-- REKENING PEMBAYARAN -->
-        <div class="p-5 md:p-7 min-w-0 border-t lg:border-t-0 lg:border-l border-slate-100">
-
-            <div class="flex items-center gap-3 mb-5">
-                <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-700">
-                    ▤
-                </div>
-                <div>
-                    <h4 class="text-xs font-extrabold tracking-wider text-slate-700 uppercase">
-                        Rekening Pembayaran
-                    </h4>
-                    <p class="text-[11px] text-slate-400 mt-1">
-                        Tujuan pembayaran resmi pesantren
-                    </p>
-                </div>
-            </div>
-
-            <div id="teks-rekening-aktif"
-                class="rounded-xl border border-emerald-100 bg-emerald-50/60 px-4 md:px-5">
-                <p class="py-4 text-sm text-emerald-800">
-                    Informasi rekening belum tersedia.
-                </p>
-            </div>
-
-            <p class="text-[11px] text-slate-400 mt-4 leading-relaxed">
-                Pastikan pembayaran dilakukan melalui rekening resmi yang tercantum di atas.
+        <div id="teks-profil-aktif"
+            class="rounded-xl border border-slate-100 bg-slate-50/70 px-4 md:px-6">
+            <p class="py-4 text-sm text-slate-500">
+                Profil pesantren belum dilengkapi.
             </p>
-
         </div>
 
     </div>
 
-    <!-- FOOTER PANEL -->
+    <!-- PEMBATAS -->
+    <div class="border-t border-slate-200"></div>
+
+    <!-- BAGIAN REKENING PEMBAYARAN -->
+    <div class="p-5 md:p-7">
+
+        <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-700">
+                ▤
+            </div>
+            <div>
+                <h4 class="text-xs font-extrabold tracking-wider text-slate-700 uppercase">
+                    Rekening Pembayaran
+                </h4>
+                <p class="text-[11px] text-slate-400 mt-1">
+                    Informasi tujuan pembayaran pesantren
+                </p>
+            </div>
+        </div>
+
+        <div id="teks-rekening-aktif"
+            class="rounded-xl border border-emerald-100 bg-emerald-50/50 px-4 md:px-6">
+            <p class="py-4 text-sm text-emerald-800">
+                Informasi rekening belum tersedia.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
     <div class="px-5 md:px-7 py-3 bg-slate-50/70 border-t border-slate-100">
         <p class="text-[10px] text-slate-400">
             Informasi ini merupakan identitas resmi dan tujuan pembayaran pesantren.
